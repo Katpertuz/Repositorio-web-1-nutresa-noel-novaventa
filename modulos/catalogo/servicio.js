@@ -31,3 +31,5 @@ productoServicio.listarMarcas = async function () {
   return await respuesta.json();
 };
 // ===== G1-MAR · Marca · fin =====
+
+

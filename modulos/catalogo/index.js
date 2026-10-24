@@ -110,7 +110,6 @@
   const tbody = document.getElementById('tabla-presentaciones-body');
   const estado = document.getElementById('catalogo-estado');
 
-  // Mapeo auxiliar de metadatos de productos para enriquecer la tabla
   const informacionProductos = {
     1: { nombre: 'Galletas Noel Tradicional (Gramos)', empaque: 'Paquete', descripcion: 'Galleta dulce tradicional para lonchera.' },
     2: { nombre: 'Pasta Doria Espagueti (Gramos)', empaque: 'Bolsa', descripcion: 'Pasta larga para preparaciones clasicas.' },
@@ -135,7 +134,7 @@
   function renderizarPresentaciones(presentaciones) {
     if (!tbody) return;
 
-    tbody.innerHTML = ''; // Limpia el contenedor antes de inyectar
+    tbody.innerHTML = ''; 
 
     presentaciones.forEach(function (item) {
       const infoExtra = informacionProductos[item.id] || {
@@ -167,7 +166,6 @@
 
   async function iniciarPresentaciones() {
     try {
-      // Consume la función definida en servicio.js
       const presentaciones = await presentacionServicio.listarPresentaciones();
       renderizarPresentaciones(presentaciones);
     } catch (error) {
