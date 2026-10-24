@@ -89,7 +89,7 @@
 
 // ===== G1-CAT · Categorías · inicio =====
 // Autor: Daniel Acevedo Yepes
-// Historia de Usuario 2.1: Visualización del listado de categorías
+// Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías
 (function () {
   async function renderizarCategorias() {
     const contenedor = document.getElementById('catalogo-categorias-contenedor');
@@ -123,6 +123,43 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', renderizarCategorias);
+  function inicializarFormulario() {
+      const formCategoria = document.getElementById('catalogo-form-categoria');
+      const alertaCategoria = document.getElementById('catalogo-categoria-alerta');
+
+      if (formCategoria) {
+          formCategoria.addEventListener('submit', async function (evento) {
+              evento.preventDefault();
+              alertaCategoria.hidden = true;
+
+              const formData = new FormData(formCategoria);
+              const nuevaCategoria = {
+                  idCategoria: Number(formData.get('idCategoria')),
+                  nombreCategoria: formData.get('nombreCategoria')
+              };
+
+              try {
+                  await productoServicio.crearCategoria(nuevaCategoria);
+                  
+                  alertaCategoria.textContent = 'Categoría registrada exitosamente.';
+                  alertaCategoria.className = 'catalogo-alerta-exito';
+                  alertaCategoria.hidden = false;
+                  
+                  formCategoria.reset();
+                  renderizarCategorias(); // Refresca el listado inmediatamente
+              } catch (error) {
+                  console.error(error);
+                  alertaCategoria.textContent = 'Fallo al registrar. Verifica los datos ingresados.';
+                  alertaCategoria.className = 'catalogo-alerta-error';
+                  alertaCategoria.hidden = false;
+              }
+          });
+      }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+      renderizarCategorias();
+      inicializarFormulario();
+  });
 })();
 // ===== G1-CAT · Categorías · fin =====
