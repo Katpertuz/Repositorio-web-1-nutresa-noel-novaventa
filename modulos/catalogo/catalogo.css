@@ -52,3 +52,41 @@
   white-space: nowrap;
 }
 /* ===== G1-MAR · Marca · fin ===== */
+
+/* ===== G1-CAT · Categorías · inicio ===== */
+/* Autor: Daniel Acevedo Yepes */
+/* Historia de Usuario 2.1: Visualización del listado de categorías */
+
+.catalogo-categorias-seccion {
+    margin-top: 2rem;
+}
+
+.catalogo-grid-categorias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.catalogo-categoria-card {
+    background-color: var(--card);
+    border: 1px solid var(--linea);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.catalogo-categoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.catalogo-categoria-card h3 {
+    margin: 0;
+    color: var(--tinta);
+    font-size: 1.25rem;
+}
+/* ===== G1-CAT · Categorías · fin ===== */

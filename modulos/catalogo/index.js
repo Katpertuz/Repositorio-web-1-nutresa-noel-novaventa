@@ -16,24 +16,6 @@
 
   document.addEventListener("DOMContentLoaded", iniciarCatalogo);
 })();
-(function () {
-  async function iniciarCatalogo() {
-    var estado = document.getElementById("catalogo-estado");
-    if (!estado) {
-      return;
-    }
-    try {
-      await window.catalogoServicio.listarTodos();
-      estado.textContent = "Estructura base del módulo catálogo cargada.";
-    } catch (error) {
-      estado.setAttribute("role", "alert");
-      estado.textContent = "No fue posible cargar la base del catálogo.";
-      console.error(error);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", iniciarCatalogo);
-})();
 
 // ===== G1-MAR · Marca · inicio =====
 (function () {
@@ -104,3 +86,43 @@
   iniciarMarcas();
 })();
 // ===== G1-MAR · Marca · fin =====
+
+// ===== G1-CAT · Categorías · inicio =====
+// Autor: Daniel Acevedo Yepes
+// Historia de Usuario 2.1: Visualización del listado de categorías
+(function () {
+  async function renderizarCategorias() {
+    const contenedor = document.getElementById('catalogo-categorias-contenedor');
+    
+    if (!contenedor) return;
+    
+    try {
+        const categorias = await productoServicio.listarCategorias();
+        contenedor.innerHTML = '';
+
+        if (!categorias || categorias.length === 0) {
+            contenedor.innerHTML = '<p role="alert">No hay categorías disponibles.</p>';
+            return;
+        }
+
+        categorias.forEach(function(categoria) {
+            const article = document.createElement('article');
+            article.className = 'catalogo-categoria-card';
+            
+            // Soporte estricto para caracteres especiales (tildes, eñes)
+            const nombreSeguro = categoria.nombre.normalize('NFC');
+            
+            article.innerHTML = `<h3>${nombreSeguro}</h3>`;
+            
+            contenedor.appendChild(article);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar categorías:', error);
+        contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar las categorías.</p>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', renderizarCategorias);
+})();
+// ===== G1-CAT · Categorías · fin =====
