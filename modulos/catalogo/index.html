@@ -16,6 +16,37 @@
       <p>Base lista para desarrollar historias de usuario del catálogo.</p>
       <div id="catalogo-estado" class="mensaje-estado" role="status"></div>
 
+<!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== -->
+<section class="catalogo-busqueda-seccion" aria-label="Búsqueda de productos">
+  <form id="catalogo-form-busqueda" class="catalogo-busqueda-bar" role="search">
+    <label for="catalogo-input-busqueda" class="catalogo-solo-lector">
+      Buscar productos por nombre o descripción
+    </label>
+    <span class="catalogo-busqueda-icono" aria-hidden="true">🔍</span>
+    <input 
+      type="search" 
+      id="catalogo-input-busqueda" 
+      class="catalogo-input-busqueda" 
+      placeholder="Buscar por producto, marca o descripción..." 
+      autocomplete="off"
+      aria-label="Buscar productos en el catálogo"
+    >
+  </form>
+</section>
+<!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin ===== -->
+
+
+<!-- ===== G1-BUS · HU 5.1: Resultados de Búsqueda (Katherin Ortega) · inicio ===== -->
+<section class="catalogo-productos-seccion" aria-label="Vitrina de productos">
+  <h2 class="catalogo-solo-lector">Listado de productos filtrados</h2>
+  
+  
+  <div id="catalogo-productos-contenedor" class="catalogo-grid-productos">
+    <p class="catalogo-cargando">Cargando productos del catálogo...</p>
+  </div>
+</section>
+<!-- ===== G1-BUS · HU 5.1: Resultados de Búsqueda · fin ===== -->
+
       <!-- ===== G1-MAR · Marca · inicio ===== -->
       <section class="catalogo-marcas" aria-labelledby="catalogo-marcas-titulo">
         <h2 id="catalogo-marcas-titulo" class="catalogo-solo-lector">Filtrar por marca</h2>
@@ -23,6 +54,32 @@
         <p id="catalogo-error" class="catalogo-error" role="alert" hidden></p>
       </section>
       <!-- ===== G1-MAR · Marca · fin ===== -->
+       
+       <!-- ===== G7-CUP · Cupón · inicio ===== -->
+       <section class="catalogo-presentaciones" aria-labelledby="catalogo-presentaciones-titulo">
+        <h2 id="catalogo-presentaciones-titulo" class="catalogo-solo-lector">Gestión de Presentaciones y Empaques</h2>
+        <p>Listado de presentaciones comerciales de productos Nutresa.</p>
+        <div class="catalogo-tabla-responsive">
+          <table class="catalogo-presentacion-tabla">
+            <caption>Listado de presentaciones comerciales y empaques</caption>
+            <thead>
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Nombre Presentación</th>
+                <th scope="col">Contenido Neto</th>
+                <th scope="col">Medida</th>
+                <th scope="col">Empaque</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-presentaciones-body">
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- ===== G7-CUP · Cupón · fin ===== -->
 
       <!-- ===== G7-CUP · Cupón · inicio - Duvan Tique ===== -->
       <section class="contenedor-formulario" style="margin-top: 30px;">
@@ -105,6 +162,11 @@
       <!-- ===== G1-CAT · Categorías · fin ===== -->
 
     </section>
+
+    
+
+
+
   </main>
 
   <footer data-layout="footer"></footer>

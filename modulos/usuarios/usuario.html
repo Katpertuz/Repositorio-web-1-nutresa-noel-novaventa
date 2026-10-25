@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de productos</title>
+    <link rel="stylesheet" href="../../assets/css/sazon.css">
+    <link rel="stylesheet" href="usuarios.css">
+</head>
+
+<body>
+    <section id="container">
+        <section id="productContainer">
+            <h2>Productos</h2>
+
+            <button id="btnProducto">Obtener Productos</button>
+            <p id="productosEstado" class="mensaje-estado" role="status"></p>
+            <div id="productosLista" class="productos-grid" aria-live="polite"></div>
+        </section>
+        <section id="userContainer">
+            <h2>Usuarios</h2>
+
+            <button id="btnUsuario" onclick="obtenerUsuario()">Obtener Usuario</button>
+        </section>
+    </section>
+
+
+
+    <script src="servicio.js"></script>
+</body>
+
+</html>

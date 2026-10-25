@@ -56,6 +56,19 @@ window.catalogoServicio.crearPresentacion = async function (nuevaPresentacion) {
     throw new Error('No se pudo crear la presentación comercial');
   }
 
+// ===== G7-CUP · Cupón · inicio =====
+window.presentacionServicio = window.presentacionServicio || {};
+
+presentacionServicio.listarPresentaciones = async function () {
+  if (API_CONFIG.modo === 'local') {
+    const datos = await catalogoServicio.listarTodos();
+    return datos.presentaciones;
+  }
+
+  const respuesta = await fetch(API_CONFIG.baseUrl + '/presentaciones');
+  if (!respuesta.ok) {
+    throw new Error('No se pudieron cargar las presentaciones comerciales');
+  }
   return await respuesta.json();
 };
 // ===== G7-CUP · Cupón · fin =====
@@ -109,3 +122,27 @@ productoServicio.crearCategoria = async function (categoria) {
   return await respuesta.json();
 };
 // ===== G1-CAT · Categorías · fin =====
+
+
+
+// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio =====
+window.productoServicio = window.productoServicio || {};
+
+/**
+ * Obtiene el listado completo de productos desde el mock local o la API REST
+ * @returns {Promise<Array>} Promesa que resuelve al arreglo de productos
+ */
+productoServicio.listarProductos = async function () {
+  if (typeof API_CONFIG !== 'undefined' && API_CONFIG.modo === 'local') {
+    const datos = await catalogoServicio.listarTodos();
+    return datos.productos || [];
+  }
+
+  const respuesta = await fetch(API_CONFIG.baseUrl + '/productos');
+  if (!respuesta.ok) {
+    throw new Error('No se pudieron cargar los productos');
+  }
+  return await respuesta.json();
+};
+// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
+
