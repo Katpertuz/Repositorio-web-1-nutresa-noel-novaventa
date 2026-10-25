@@ -152,6 +152,39 @@
   border-radius: 8px;
 }
 
+
+/* Estilos para las fotos e información de presentación */
+.catalogo-producto-figura {
+  margin: 0 0 0.75rem 0;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 6px;
+  background-color: #f1f5f9;
+}
+
+.catalogo-producto-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.catalogo-producto-tarjeta:hover .catalogo-producto-img {
+  transform: scale(1.04);
+}
+
+.catalogo-producto-presentacion-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  background-color: #e2e8f0;
+  color: #334155;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  width: fit-content;
+}
+
 /* ===== G1-BUS · HU 5.2: Filtros Combinados · fin ===== */
 
 
@@ -215,6 +248,8 @@
 }
 
 /* ===== G1-BUS · Estilos de Vitrina de Productos · fin ===== */
+
+
 
 
 
