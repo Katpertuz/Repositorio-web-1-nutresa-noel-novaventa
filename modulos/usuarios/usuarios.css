@@ -6,6 +6,46 @@
   margin-top: 1rem;
 }
 
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.producto-tarjeta {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--linea, #dad9c4);
+  border-radius: 10px;
+}
+
+.producto-tarjeta-imagen {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #e9e8d7;
+}
+
+.producto-tarjeta-contenido {
+  padding: 1rem;
+}
+
+.producto-tarjeta-contenido h3 {
+  margin: 0 0 0.5rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.producto-tarjeta-contenido p {
+  margin: 0.35rem 0;
+}
+
+.producto-tarjeta-precio {
+  color: var(--verde-hondo, #215b33);
+  font-weight: 700;
+}
+
 .usuarios-paneles-oculto {
   display: none;
 }
