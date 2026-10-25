@@ -104,3 +104,56 @@
   iniciarMarcas();
 })();
 // ===== G1-MAR · Marca · fin =====
+
+// ===== G7-CUP · Cupón · inicio - Duvan Tique =====
+(function () {
+    const form = document.getElementById('formCrearPresentacion');
+    const alerta = document.getElementById('alertaFormulario');
+
+    if (!form || !alerta) {
+        return;
+    }
+
+    form.addEventListener('submit', async function (evento) {
+        evento.preventDefault();
+
+        const idPresentacion = document.getElementById('idPresentacion').value.trim();
+        const nombrePresentacion = document.getElementById('nombrePresentacion').value.trim();
+        const pesoNeto = parseFloat(document.getElementById('pesoNeto').value);
+
+        if (!idPresentacion || !nombrePresentacion || isNaN(pesoNeto) || pesoNeto <= 0) {
+            alerta.className = 'alerta alerta-error';
+            alerta.textContent = 'Por favor, completa todos los campos obligatorios correctamente.';
+            alerta.hidden = false;
+            return;
+        }
+
+        const nuevaPresentacion = {
+            idPresentacion,
+            nombrePresentacion,
+            pesoNeto
+        };
+
+        try {
+            if (window.catalogoServicio && typeof window.catalogoServicio.crearPresentacion === 'function') {
+                await window.catalogoServicio.crearPresentacion(nuevaPresentacion);
+            }
+
+            alerta.className = 'alerta alerta-exito';
+            alerta.textContent = '¡Presentación comercial registrada con éxito!';
+            alerta.hidden = false;
+            form.reset();
+
+            document.dispatchEvent(new CustomEvent('catalogo:presentacion-creada', {
+                detail: nuevaPresentacion
+            }));
+
+        } catch (error) {
+            console.error(error);
+            alerta.className = 'alerta alerta-error';
+            alerta.textContent = 'No fue posible registrar la presentación. Intenta de nuevo más tarde.';
+            alerta.hidden = false;
+        }
+    });
+})();
+// ===== G7-CUP · Cupón · fin =====
