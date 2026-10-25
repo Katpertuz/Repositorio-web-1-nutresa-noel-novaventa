@@ -286,3 +286,200 @@
   }
 })();
 // ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
+
+// ===== G1-BUS · HU 5.2: Filtros Combinados (Katherin Ortega) · inicio =====
+(function () {
+  "use strict";
+
+  
+  const filtrosActivos = {
+    texto: "",
+    idMarca: "",
+    idCategoria: "",
+    idPresentacion: ""
+  };
+
+  let productosGlobales = [];
+
+  
+  function normalizarTexto(cadena) {
+    if (!cadena) return "";
+    return cadena
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+ 
+  function aplicarFiltrosCombinados(productos) {
+    return productos.filter((producto) => {
+      
+      const termino = normalizarTexto(filtrosActivos.texto);
+      const nombre = normalizarTexto(producto.nombreProducto || producto.nombre);
+      const descripcion = normalizarTexto(producto.descripcion || "");
+      const cumpleTexto = !termino || nombre.includes(termino) || descripcion.includes(termino);
+
+      
+      const cumpleMarca =
+        !filtrosActivos.idMarca || String(producto.idMarca) === String(filtrosActivos.idMarca);
+
+      
+      const cumpleCategoria =
+        !filtrosActivos.idCategoria || String(producto.idCategoria) === String(filtrosActivos.idCategoria);
+
+      
+      const cumplePresentacion =
+        !filtrosActivos.idPresentacion || String(producto.idPresentacion || producto.presentacion) === String(filtrosActivos.idPresentacion);
+
+      return cumpleTexto && cumpleMarca && cumpleCategoria && cumplePresentacion;
+    });
+  }
+
+  
+  function renderizarProductos(productos) {
+    const contenedor = document.querySelector("#catalogo-productos-contenedor");
+    if (!contenedor) return;
+
+    contenedor.replaceChildren(); 
+
+    // Manejo de Estado Vacío
+    if (!productos || productos.length === 0) {
+      const mensajeVacio = document.createElement("p");
+      mensajeVacio.className = "catalogo-sin-resultados";
+      mensajeVacio.setAttribute("role", "alert"); 
+      mensajeVacio.textContent = "No se encontraron productos que cumplan con los filtros seleccionados.";
+      contenedor.appendChild(mensajeVacio);
+      return;
+    }
+
+    
+    const fragmento = document.createDocumentFragment();
+
+    productos.forEach((producto) => {
+      const tarjeta = document.createElement("article");
+      tarjeta.className = "catalogo-producto-tarjeta";
+
+      const titulo = document.createElement("h3");
+      titulo.className = "catalogo-producto-titulo";
+      titulo.textContent = (producto.nombreProducto || producto.nombre || "Producto").normalize("NFC");
+
+      const descripcion = document.createElement("p");
+      descripcion.className = "catalogo-producto-descripcion";
+      descripcion.textContent = (producto.descripcion || "Sin descripción disponible.").normalize("NFC");
+
+      tarjeta.appendChild(titulo);
+      tarjeta.appendChild(descripcion);
+
+      if (producto.precio) {
+        const precio = document.createElement("span");
+        precio.className = "catalogo-producto-precio";
+        precio.textContent = `$${Number(producto.precio).toLocaleString("es-CO")}`;
+        tarjeta.appendChild(precio);
+      }
+
+      fragmento.appendChild(tarjeta);
+    });
+
+    contenedor.appendChild(fragmento);
+  }
+
+  
+  function cargarOpcionesSelect(selectorId, lista, propiedadTexto, propiedadValor) {
+    const select = document.querySelector(selectorId);
+    if (!select || !Array.isArray(lista)) return;
+
+    lista.forEach((item) => {
+      const opcion = document.createElement("option");
+      opcion.value = item[propiedadValor] !== undefined ? item[propiedadValor] : item;
+      opcion.textContent = (item[propiedadTexto] || item).normalize("NFC");
+      select.appendChild(opcion);
+    });
+  }
+
+  
+  function inicializarModuloFiltros(datosCatalogo) {
+    const selectMarca = document.querySelector("#catalogo-select-marca");
+    const selectCategoria = document.querySelector("#catalogo-select-categoria");
+    const selectPresentacion = document.querySelector("#catalogo-select-presentacion");
+    const btnLimpiar = document.querySelector("#catalogo-btn-limpiar-filtros");
+    const inputBusqueda = document.querySelector("#catalogo-input-busqueda");
+
+    
+    if (datosCatalogo.marcas) cargarOpcionesSelect("#catalogo-select-marca", datosCatalogo.marcas, "nombre", "id");
+    if (datosCatalogo.categorias) cargarOpcionesSelect("#catalogo-select-categoria", datosCatalogo.categorias, "nombre", "id");
+    if (datosCatalogo.presentaciones) cargarOpcionesSelect("#catalogo-select-presentacion", datosCatalogo.presentaciones, "nombre", "id");
+
+    function actualizarInterfaz() {
+      const resultados = aplicarFiltrosCombinados(productosGlobales);
+      renderizarProductos(resultados);
+    }
+
+    
+    if (inputBusqueda) {
+      inputBusqueda.addEventListener("input", (e) => {
+        filtrosActivos.texto = e.target.value;
+        actualizarInterfaz();
+      });
+    }
+
+    
+    if (selectMarca) {
+      selectMarca.addEventListener("change", (e) => {
+        filtrosActivos.idMarca = e.target.value;
+        actualizarInterfaz();
+      });
+    }
+
+    if (selectCategoria) {
+      selectCategoria.addEventListener("change", (e) => {
+        filtrosActivos.idCategoria = e.target.value;
+        actualizarInterfaz();
+      });
+    }
+
+    if (selectPresentacion) {
+      selectPresentacion.addEventListener("change", (e) => {
+        filtrosActivos.idPresentacion = e.target.value;
+        actualizarInterfaz();
+      });
+    }
+
+
+    if (btnLimpiar) {
+      btnLimpiar.addEventListener("click", () => {
+        filtrosActivos.texto = "";
+        filtrosActivos.idMarca = "";
+        filtrosActivos.idCategoria = "";
+        filtrosActivos.idPresentacion = "";
+
+        if (inputBusqueda) inputBusqueda.value = "";
+        if (selectMarca) selectMarca.value = "";
+        if (selectCategoria) selectCategoria.value = "";
+        if (selectPresentacion) selectPresentacion.value = "";
+
+        actualizarInterfaz();
+      });
+    }
+  }
+
+  
+  async function iniciarFiltrosCombinados() {
+    try {
+      const datos = await catalogoServicio.listarTodos();
+      productosGlobales = datos.productos || [];
+
+      renderizarProductos(productosGlobales);
+      inicializarModuloFiltros(datos);
+    } catch (error) {
+      console.error("Error al cargar los datos en el módulo de filtros:", error);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciarFiltrosCombinados);
+  } else {
+    iniciarFiltrosCombinados();
+  }
+})();
+// ===== G1-BUS · HU 5.2: Filtros Combinados (Katherin Ortega) · fin =====
