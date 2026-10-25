@@ -53,6 +53,51 @@
 }
 /* ===== G1-MAR · Marca · fin ===== */
 
+/* ===== G7-CUP · Cupón · inicio ===== */
+.catalogo-presentaciones {
+  margin-top: 2rem;
+}
+
+.catalogo-tabla-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--card, #ffffff);
+  border: 1px solid var(--linea, #E9E8D7);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+}
+
+.catalogo-presentacion-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--tinta, #3F4040);
+}
+
+.catalogo-presentacion-tabla th,
+.catalogo-presentacion-tabla td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--linea, #E9E8D7);
+}
+
+.catalogo-presentacion-tabla th {
+  background-color: var(--verde, #215B33);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.catalogo-presentacion-tabla tbody tr:hover {
+  background-color: var(--crema-2, #E9E8D7);
+}
+
+.catalogo-presentacion-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+/* ===== G7-CUP · Cupón · fin ===== */
 /* ===== G1-CAT · Categorías · inicio ===== */
 /* Autor: Daniel Acevedo Yepes */
 /* Historia de Usuario 2.1: Visualización del listado de categorías */

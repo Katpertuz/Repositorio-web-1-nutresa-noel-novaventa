@@ -87,6 +87,77 @@
 })();
 // ===== G1-MAR · Marca · fin =====
 
+// ===== G7-CUP · Cupón · inicio =====
+(function () {
+  const tbody = document.getElementById('tabla-presentaciones-body');
+  const estado = document.getElementById('catalogo-estado');
+
+  const informacionProductos = {
+    1: { nombre: 'Galletas Noel Tradicional (Gramos)', empaque: 'Paquete', descripcion: 'Galleta dulce tradicional para lonchera.' },
+    2: { nombre: 'Pasta Doria Espagueti (Gramos)', empaque: 'Bolsa', descripcion: 'Pasta larga para preparaciones clasicas.' },
+    3: { nombre: 'Cafe Colcafe Clasico (Gramos)', empaque: 'Frasco', descripcion: 'Cafe soluble tradicional.' },
+    4: { nombre: 'Chocolate Jet (Gramos)', empaque: 'Barra', descripcion: 'Chocolate de leche en barra.' },
+    5: { nombre: 'Salchicha Ranchera (Gramos)', empaque: 'Paquete', descripcion: 'Salchicha lista para cocinar.' },
+    6: { nombre: 'Galletas Festival Vainilla', empaque: 'Paquete', descripcion: 'Galleta rellena sabor vainilla.' },
+    7: { nombre: 'Pasta Doria Tornillos', empaque: 'Bolsa', descripcion: 'Pasta corta tipo tornillo.' },
+    8: { nombre: 'Colcafe Cappuccino Vainilla', empaque: 'Caja', descripcion: 'Mezcla instantanea sabor vainilla.' },
+    9: { nombre: 'Jet Leche Mani', empaque: 'Barra', descripcion: 'Chocolate con mani.' },
+    10: { nombre: 'Ranchera Premium', empaque: 'Paquete', descripcion: 'Linea premium de salchichas.' }
+  };
+
+  function formatearPrecio(precio) {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(precio);
+  }
+
+  function renderizarPresentaciones(presentaciones) {
+    if (!tbody) return;
+
+    tbody.innerHTML = ''; 
+
+    presentaciones.forEach(function (item) {
+      const infoExtra = informacionProductos[item.id] || {
+        nombre: 'Presentación Nutresa',
+        empaque: 'Empaque',
+        descripcion: item.descripcion
+      };
+
+      const codigoStr = `G1-PRE-${String(item.id).padStart(3, '0')}`;
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${codigoStr}</td>
+        <td>${infoExtra.nombre}</td>
+        <td>${item.contenidoNeto}${item.unidadMedida}</td>
+        <td>${item.descripcion}</td>
+        <td>${infoExtra.empaque}</td>
+        <td>${infoExtra.descripcion}</td>
+        <td>${formatearPrecio(item.precio)}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    if (estado) {
+      estado.textContent = `Listado de las ${presentaciones.length} presentaciones comerciales cargado correctamente.`;
+    }
+  }
+
+  async function iniciarPresentaciones() {
+    try {
+      const presentaciones = await presentacionServicio.listarPresentaciones();
+      renderizarPresentaciones(presentaciones);
+    } catch (error) {
+      console.error('Error al cargar las presentaciones:', error);
+    }
+  }
+
+  iniciarPresentaciones();
+})();
+// ===== G7-CUP · Cupón · fin =====
 // ===== G1-CAT · Categorías · inicio =====
 // Autor: Daniel Acevedo Yepes
 // Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías

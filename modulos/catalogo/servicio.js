@@ -33,6 +33,22 @@ productoServicio.listarMarcas = async function () {
 };
 // ===== G1-MAR · Marca · fin =====
 
+// ===== G7-CUP · Cupón · inicio =====
+window.presentacionServicio = window.presentacionServicio || {};
+
+presentacionServicio.listarPresentaciones = async function () {
+  if (API_CONFIG.modo === 'local') {
+    const datos = await catalogoServicio.listarTodos();
+    return datos.presentaciones;
+  }
+
+  const respuesta = await fetch(API_CONFIG.baseUrl + '/presentaciones');
+  if (!respuesta.ok) {
+    throw new Error('No se pudieron cargar las presentaciones comerciales');
+  }
+  return await respuesta.json();
+};
+// ===== G7-CUP · Cupón · fin =====
 // ===== G1-CAT · Categorías · inicio =====
 // Autor: Daniel Acevedo Yepes
 // Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías
