@@ -16,46 +16,7 @@
       <p>Base lista para desarrollar historias de usuario del catálogo.</p>
       <div id="catalogo-estado" class="mensaje-estado" role="status"></div>
 
-      <!-- ===== G1-MAR · Marca · inicio ===== -->
-      <section class="catalogo-marcas" aria-labelledby="catalogo-marcas-titulo">
-        <h2 id="catalogo-marcas-titulo" class="catalogo-solo-lector">Filtrar por marca</h2>
-        <div id="catalogo-marcas"></div>
-        <p id="catalogo-error" class="catalogo-error" role="alert" hidden></p>
-      </section>
-      <!-- ===== G1-MAR · Marca · fin ===== -->
-
-      <!-- ===== G1-CAT · Categorías · inicio ===== -->
-      <!-- Autor: Daniel Acevedo Yepes -->
-      <!-- Historia de Usuario 2.1: Visualización del listado de categorías -->
-      <section class="catalogo-categorias-seccion">
-          <!-- Formulario de creación HU 2.2 -Autor Daniel Acevedo - fin -->
-          <form id="catalogo-form-categoria" class="catalogo-formulario">
-              <fieldset>
-                  <legend>Registrar Nueva Categoría</legend>
-                  
-                  <div class="catalogo-form-grupo">
-                      <label for="idCategoria">ID de la Categoría</label>
-                      <input type="number" id="idCategoria" name="idCategoria" required min="1">
-                  </div>
-                  
-                  <div class="catalogo-form-grupo">
-                      <label for="nombreCategoria">Nombre de la Categoría</label>
-                      <input type="text" id="nombreCategoria" name="nombreCategoria" required>
-                  </div>
-                  
-                  <button type="submit" class="catalogo-btn-guardar">Guardar Categoría</button>
-              </fieldset>
-              
-              <!-- Contenedor para notificaciones de error o éxito -->
-              <div id="catalogo-categoria-alerta" role="alert" hidden></div>
-          </form>       
-           <!-- Formulario de creación HU 2.2 -Autor Daniel Acevedo - fin-->
-          <h2>Categorías de Productos</h2>
-          <div id="catalogo-categorias-contenedor" class="catalogo-grid-categorias">
-              <p>Cargando categorías...</p>
-          </div>
-      </section>
-      <!-- ===== G1-CAT · Categorías · fin ===== -->
+      
 
     </section>
   </main>
