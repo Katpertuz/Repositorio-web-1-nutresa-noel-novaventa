@@ -6,37 +6,36 @@
   width: 100%;
 }
 
-/* Barra estilo rectangular con borde definido y esquinas suavizadas */
+
 .catalogo-busqueda-bar {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border: 2px solid #cbd5e1; /* Bordeado exterior claro y marcado */
-  border-radius: 6px; /* Estilo cuadrado con esquinas suavemente redondeadas */
+  border: 2px solid #cbd5e1; 
+  border-radius: 6px; 
   padding: 0.5rem 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efecto al hacer clic / escribir en la caja */
+
 .catalogo-busqueda-bar:focus-within {
-  border-color: #d32f2f; /* Color corporativo de Sazón */
+  border-color: #d32f2f; 
   box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
 }
 
-/* Icono de la lupa con barra divisoria vertical */
+
 .catalogo-busqueda-icono {
   font-size: 1.1rem;
   padding-right: 0.75rem;
   margin-right: 0.75rem;
   color: #64748b;
-  border-right: 1px solid #cbd5e1; /* Línea que divide la lupa del texto */
+  border-right: 1px solid #cbd5e1;
   display: flex;
   align-items: center;
   user-select: none;
 }
 
-/* Campo de texto de entrada */
 .catalogo-input-busqueda {
   width: 100%;
   border: none;
@@ -51,7 +50,7 @@
   color: #94a3b8;
 }
 
-/* Ocultar la clase accesible de solo lector */
+
 .catalogo-solo-lector {
   position: absolute;
   width: 1px;
