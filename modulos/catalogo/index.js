@@ -169,6 +169,7 @@
 (function () {
   "use strict";
 
+  // 1. Normalización de texto (insensible a tildes, mayúsculas y espacios)
   function normalizarTexto(cadena) {
     if (!cadena) return "";
     return cadena
@@ -178,9 +179,9 @@
       .trim();
   }
 
-
+  // 2. Algoritmo puro de filtrado sobre el arreglo de productos
   function filtrarProductos(productos, termino) {
-    if (!termino) return productos; 
+    if (!termino) return productos;
 
     return productos.filter((producto) => {
       const nombre = normalizarTexto(producto.nombreProducto || producto.nombre);
@@ -189,25 +190,78 @@
     });
   }
 
+  // 3. Renderizador dinámico: Pinta las tarjetas en el DOM de la pantalla
+  function renderizarProductos(productos) {
+    const contenedor = document.querySelector("#catalogo-productos-contenedor");
+    if (!contenedor) return;
+
+    // Limpia el contenido anterior de forma segura
+    contenedor.replaceChildren();
+
+    // Estado vacío si no hay coincidencias
+    if (!productos || productos.length === 0) {
+      const mensajeVacio = document.createElement("p");
+      mensajeVacio.className = "catalogo-sin-resultados";
+      mensajeVacio.setAttribute("role", "status");
+      mensajeVacio.textContent = "No se encontraron productos que coincidan con tu búsqueda.";
+      contenedor.appendChild(mensajeVacio);
+      return;
+    }
+
+    // Usamos DocumentFragment para optimizar el rendimiento de pintado
+    const fragmento = document.createDocumentFragment();
+
+    productos.forEach((producto) => {
+      const tarjeta = document.createElement("article");
+      tarjeta.className = "catalogo-producto-tarjeta";
+
+      const titulo = document.createElement("h3");
+      titulo.className = "catalogo-producto-titulo";
+      titulo.textContent = producto.nombreProducto || producto.nombre || "Producto sin nombre";
+
+      const descripcion = document.createElement("p");
+      descripcion.className = "catalogo-producto-descripcion";
+      descripcion.textContent = producto.descripcion || "Sin descripción disponible.";
+
+      tarjeta.appendChild(titulo);
+      tarjeta.appendChild(descripcion);
+
+      if (producto.precio) {
+        const precio = document.createElement("span");
+        precio.className = "catalogo-producto-precio";
+        precio.textContent = `$${Number(producto.precio).toLocaleString("es-CO")}`;
+        tarjeta.appendChild(precio);
+      }
+
+      fragmento.appendChild(tarjeta);
+    });
+
+    contenedor.appendChild(fragmento);
+  }
+
+  // 4. Captura de eventos e inicialización
   function inicializarBuscador(productos) {
     const formularioBusqueda = document.querySelector("#catalogo-form-busqueda");
     const inputBusqueda = document.querySelector("#catalogo-input-busqueda");
 
+    // Muestra todos los productos al cargar la página
+    renderizarProductos(productos);
+
     if (!formularioBusqueda || !inputBusqueda) return;
 
-    
     formularioBusqueda.addEventListener("submit", (evento) => {
       evento.preventDefault();
     });
 
-    
+    // Filtra y picas las tarjetas en tiempo real a medida que el usuario teclea
     inputBusqueda.addEventListener("input", (evento) => {
       const terminoBusqueda = normalizarTexto(evento.target.value);
       const resultados = filtrarProductos(productos, terminoBusqueda);
 
-      console.log(`[HU 5.1 Buscador] Resultados (${resultados.length}):`, resultados);
+      // Dibuja el resultado filtrado en la pantalla
+      renderizarProductos(resultados);
 
-      
+      // Notifica a otros módulos si lo requieren
       document.dispatchEvent(
         new CustomEvent("catalogo:busqueda-realizada", {
           detail: { productosFiltrados: resultados, termino: terminoBusqueda },
@@ -216,6 +270,7 @@
     });
   }
 
+  // 5. Carga asíncrona respaldada por la Capa de Servicio
   async function iniciarBuscador() {
     try {
       const productos = await productoServicio.listarProductos();
@@ -225,7 +280,6 @@
     }
   }
 
- 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", iniciarBuscador);
   } else {
