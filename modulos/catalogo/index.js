@@ -300,23 +300,27 @@
   };
 
   let productosGlobales = [];
+  let presentacionesGlobales = [];
+  let imagenesGlobales = [];
 
   
   function normalizarTexto(cadena) {
     if (!cadena) return "";
-    return cadena
+    return String(cadena)
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim();
   }
 
- 
+  
   function aplicarFiltrosCombinados(productos) {
     return productos.filter((producto) => {
+      const idProd = producto.id !== undefined ? producto.id : producto.idProducto;
+
       
       const termino = normalizarTexto(filtrosActivos.texto);
-      const nombre = normalizarTexto(producto.nombreProducto || producto.nombre);
+      const nombre = normalizarTexto(producto.nombre || producto.nombreProducto);
       const descripcion = normalizarTexto(producto.descripcion || "");
       const cumpleTexto = !termino || nombre.includes(termino) || descripcion.includes(termino);
 
@@ -329,8 +333,13 @@
         !filtrosActivos.idCategoria || String(producto.idCategoria) === String(filtrosActivos.idCategoria);
 
       
-      const cumplePresentacion =
-        !filtrosActivos.idPresentacion || String(producto.idPresentacion || producto.presentacion) === String(filtrosActivos.idPresentacion);
+      let cumplePresentacion = true;
+      if (filtrosActivos.idPresentacion) {
+        const presEncontrada = presentacionesGlobales.find(
+          (p) => String(p.id) === String(filtrosActivos.idPresentacion)
+        );
+        cumplePresentacion = presEncontrada ? String(presEncontrada.idProducto) === String(idProd) : false;
+      }
 
       return cumpleTexto && cumpleMarca && cumpleCategoria && cumplePresentacion;
     });
@@ -343,38 +352,70 @@
 
     contenedor.replaceChildren(); 
 
-    // Manejo de Estado Vacío
+    
     if (!productos || productos.length === 0) {
       const mensajeVacio = document.createElement("p");
       mensajeVacio.className = "catalogo-sin-resultados";
-      mensajeVacio.setAttribute("role", "alert"); 
+      mensajeVacio.setAttribute("role", "alert");
       mensajeVacio.textContent = "No se encontraron productos que cumplan con los filtros seleccionados.";
       contenedor.appendChild(mensajeVacio);
       return;
     }
 
-    
     const fragmento = document.createDocumentFragment();
 
     productos.forEach((producto) => {
+      const idProd = producto.id !== undefined ? producto.id : producto.idProducto;
+
       const tarjeta = document.createElement("article");
       tarjeta.className = "catalogo-producto-tarjeta";
 
+      
+      const imagenData = imagenesGlobales.find((img) => img.idProducto === idProd && img.esPrincipal) ||
+                         imagenesGlobales.find((img) => img.idProducto === idProd);
+
+      if (imagenData) {
+        const figura = document.createElement("figure");
+        figura.className = "catalogo-producto-figura";
+
+        const img = document.createElement("img");
+        img.src = imagenData.url;
+        img.alt = imagenData.textoAlternativo || producto.nombre || "Imagen del producto";
+        img.className = "catalogo-producto-img";
+        img.loading = "lazy";
+
+        figura.appendChild(img);
+        tarjeta.appendChild(figura);
+      }
+
+      
       const titulo = document.createElement("h3");
       titulo.className = "catalogo-producto-titulo";
-      titulo.textContent = (producto.nombreProducto || producto.nombre || "Producto").normalize("NFC");
+      titulo.textContent = String(producto.nombre || producto.nombreProducto || "Producto").normalize("NFC");
 
+      
       const descripcion = document.createElement("p");
       descripcion.className = "catalogo-producto-descripcion";
-      descripcion.textContent = (producto.descripcion || "Sin descripción disponible.").normalize("NFC");
+      descripcion.textContent = String(producto.descripcion || "Sin descripción disponible.").normalize("NFC");
 
       tarjeta.appendChild(titulo);
       tarjeta.appendChild(descripcion);
 
-      if (producto.precio) {
+     
+      const presData = presentacionesGlobales.find((p) => p.idProducto === idProd);
+      if (presData) {
+        const presentacionTag = document.createElement("span");
+        presentacionTag.className = "catalogo-producto-presentacion-tag";
+        presentacionTag.textContent = presData.descripcion;
+        tarjeta.appendChild(presentacionTag);
+      }
+
+      
+      const precioValor = producto.precioReferencia !== undefined ? producto.precioReferencia : producto.precioRef;
+      if (precioValor !== undefined && precioValor !== null) {
         const precio = document.createElement("span");
         precio.className = "catalogo-producto-precio";
-        precio.textContent = `$${Number(producto.precio).toLocaleString("es-CO")}`;
+        precio.textContent = `$${Number(precioValor).toLocaleString("es-CO")}`;
         tarjeta.appendChild(precio);
       }
 
@@ -387,12 +428,21 @@
   
   function cargarOpcionesSelect(selectorId, lista, propiedadTexto, propiedadValor) {
     const select = document.querySelector(selectorId);
-    if (!select || !Array.isArray(lista)) return;
+    if (!select || !Array.isArray(lista) || lista.length === 0) return;
 
     lista.forEach((item) => {
       const opcion = document.createElement("option");
-      opcion.value = item[propiedadValor] !== undefined ? item[propiedadValor] : item;
-      opcion.textContent = (item[propiedadTexto] || item).normalize("NFC");
+
+      let texto = item;
+      let valor = item;
+
+      if (item && typeof item === "object") {
+        valor = item[propiedadValor] !== undefined ? item[propiedadValor] : (item.id !== undefined ? item.id : item);
+        texto = item[propiedadTexto] || item.descripcion || item.nombre || item.id || "";
+      }
+
+      opcion.value = String(valor !== undefined ? valor : "");
+      opcion.textContent = String(texto).normalize("NFC");
       select.appendChild(opcion);
     });
   }
@@ -405,10 +455,9 @@
     const btnLimpiar = document.querySelector("#catalogo-btn-limpiar-filtros");
     const inputBusqueda = document.querySelector("#catalogo-input-busqueda");
 
-    
     if (datosCatalogo.marcas) cargarOpcionesSelect("#catalogo-select-marca", datosCatalogo.marcas, "nombre", "id");
     if (datosCatalogo.categorias) cargarOpcionesSelect("#catalogo-select-categoria", datosCatalogo.categorias, "nombre", "id");
-    if (datosCatalogo.presentaciones) cargarOpcionesSelect("#catalogo-select-presentacion", datosCatalogo.presentaciones, "nombre", "id");
+    if (datosCatalogo.presentaciones) cargarOpcionesSelect("#catalogo-select-presentacion", datosCatalogo.presentaciones, "descripcion", "id");
 
     function actualizarInterfaz() {
       const resultados = aplicarFiltrosCombinados(productosGlobales);
@@ -445,7 +494,7 @@
       });
     }
 
-
+    // Restablecer filtros
     if (btnLimpiar) {
       btnLimpiar.addEventListener("click", () => {
         filtrosActivos.texto = "";
@@ -468,6 +517,8 @@
     try {
       const datos = await catalogoServicio.listarTodos();
       productosGlobales = datos.productos || [];
+      presentacionesGlobales = datos.presentaciones || [];
+      imagenesGlobales = datos.imagenesProducto || [];
 
       renderizarProductos(productosGlobales);
       inicializarModuloFiltros(datos);
