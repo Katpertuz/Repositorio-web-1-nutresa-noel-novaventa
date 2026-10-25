@@ -1,193 +1,106 @@
-/* ===== G1-MAR · Marca · inicio ===== */
-.catalogo-marcas-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin: 1rem 0 0;
-  padding: 0;
-  list-style: none;
+/* Acciones y botones semánticos */
+.catalogo-acciones {
+  margin-top: 1.5rem;
 }
 
-.catalogo-marca-btn {
-  padding: 0.45rem 1rem;
-  font: inherit;
+.btn-primario {
+  background-color: #d32f2f;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--tinta);
-  background: var(--card);
-  border: 1px solid var(--linea);
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.2s ease;
 }
 
-.catalogo-marca-btn:hover {
-  border-color: var(--verde);
-  background: var(--crema-2);
+.btn-primario:hover {
+  background-color: #b71c1c;
 }
 
-.catalogo-marca-btn:focus-visible {
-  outline: 3px solid var(--hoja);
-  outline-offset: 2px;
+.btn-primario:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
 }
 
-.catalogo-marca-btn--activa,
-.catalogo-marca-btn--activa:hover {
-  color: var(--card);
-  background: var(--verde);
-  border-color: var(--verde);
+/* Grilla responsive con etiqueta <section> */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
-.catalogo-error {
-  margin: 1rem 0 0;
-  color: var(--rojo);
-  font-weight: 600;
+/* Tarjeta semántica <article> */
+.card {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.catalogo-solo-lector {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Ilustración semántica <figure> e <img> */
+.card-figura {
+  position: relative;
+  margin: 0 0 0.75rem 0;
+  width: 100%;
+  height: 150px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-/* ===== G1-MAR · Marca · fin ===== */
-
-/* ===== G1-CAT · Categorías · inicio ===== */
-/* Autor: Daniel Acevedo Yepes */
-/* Historia de Usuario 2.1: Visualización del listado de categorías */
-
-.catalogo-categorias-seccion {
-    margin-top: 2rem;
 }
 
-.catalogo-grid-categorias {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.catalogo-categoria-card {
-    background-color: var(--card);
-    border: 1px solid var(--linea);
-    border-radius: 8px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
+.card-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #d32f2f;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
-.catalogo-categoria-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+/* Secciones internas <header> y <footer> */
+.card-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+  color: #1e293b;
 }
 
-.catalogo-categoria-card h3 {
-    margin: 0;
-    color: var(--tinta);
-    font-size: 1.25rem;
-}
-/* ===== G1-CAT · Categorías · fin ===== */
-
-/* ===== G1-CAT · Categorías · inicio ===== */
-/* Autor: Daniel Acevedo Yepes */
-/* Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías */
-
-.catalogo-categorias-seccion {
-    margin-top: 2rem;
+.card-footer p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: #64748b;
 }
 
-.catalogo-grid-categorias {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
 
-.catalogo-categoria-card {
-    background-color: var(--card);
-    border: 1px solid var(--linea);
-    border-radius: 8px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
-}
 
-.catalogo-categoria-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-}
 
-.catalogo-categoria-card h3 {
-    margin: 0;
-    color: var(--tinta);
-    font-size: 1.25rem;
-}
 
-/* --- Estilos HU 2.2: Formulario de Registro --- */
-.catalogo-formulario {
-    background-color: var(--card);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--linea);
-    margin-bottom: 2rem;
-}
 
-.catalogo-formulario fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
-}
 
-.catalogo-formulario legend {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--tinta);
-    margin-bottom: 1rem;
-}
 
-.catalogo-form-grupo {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-}
 
-.catalogo-form-grupo label {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--tinta);
-}
 
-.catalogo-form-grupo input {
-    padding: 0.5rem;
-    border: 1px solid var(--linea);
-    border-radius: 4px;
-    font-family: inherit;
-}
 
-.catalogo-btn-guardar {
-    background-color: var(--verde);
-    color: var(--card);
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-}
 
-.catalogo-alerta-exito {
-    margin-top: 1rem;
-    color: var(--hoja);
-    font-weight: 600;
-}
 
-.catalogo-alerta-error {
-    margin-top: 1rem;
-    color: var(--rojo);
-    font-weight: 600;
-}
-/* ===== G1-CAT · Categorías · fin ===== */
