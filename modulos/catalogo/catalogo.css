@@ -66,6 +66,95 @@
 /* ===== G1-BUS · HU 5.1: Motor de Búsqueda · fin ===== */
 
 
+/* ===== G1-BUS · HU 5.2: Filtros Combinados (Katherin Ortega) · inicio ===== */
+
+.catalogo-filtro-panel {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1rem 0 2rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.catalogo-filtro-titulo {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.catalogo-filtro-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.catalogo-filtro-grupo {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalogo-filtro-leyenda {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.35rem;
+}
+
+.catalogo-filtro-select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalogo-filtro-select:focus {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
+}
+
+.catalogo-filtro-btn-limpiar {
+  background-color: transparent;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.catalogo-filtro-btn-limpiar:hover {
+  background-color: #d32f2f;
+  color: #ffffff;
+}
+
+/* Estado de alerta accesible para resultados vacíos */
+.catalogo-sin-resultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.5rem;
+  color: #64748b;
+  font-size: 1rem;
+  background-color: #fff5f5;
+  border: 2px dashed #feb2b2;
+  border-radius: 8px;
+}
+
+/* ===== G1-BUS · HU 5.2: Filtros Combinados · fin ===== */
+
+
 /* ===== G1-BUS · Estilos de Vitrina de Productos (Katherin Ortega) · inicio ===== */
 
 /* Grilla de productos adaptable */
