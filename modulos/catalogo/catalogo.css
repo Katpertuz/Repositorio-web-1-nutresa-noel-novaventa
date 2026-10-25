@@ -1,36 +1,38 @@
 
 /* ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== */
 
-/* Contenedor principal de la sección de búsqueda */
 .catalogo-busqueda-seccion {
   margin: 1.5rem 0 2rem 0;
   width: 100%;
 }
 
-/* Barra de búsqueda estilizada */
+/* Barra estilo rectangular con borde definido y esquinas suavizadas */
 .catalogo-busqueda-bar {
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 0.6rem 1.2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  border: 2px solid #cbd5e1; /* Bordeado exterior claro y marcado */
+  border-radius: 6px; /* Estilo cuadrado con esquinas suavemente redondeadas */
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efecto al hacer foco (escribir) */
+/* Efecto al hacer clic / escribir en la caja */
 .catalogo-busqueda-bar:focus-within {
-  border-color: #d32f2f; /* Color primario corporativo */
-  box-shadow: 0 4px 16px rgba(211, 47, 47, 0.15);
-  transform: translateY(-1px);
+  border-color: #d32f2f; /* Color corporativo de Sazón */
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
 }
 
-/* Icono de la lupa */
+/* Icono de la lupa con barra divisoria vertical */
 .catalogo-busqueda-icono {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  padding-right: 0.75rem;
   margin-right: 0.75rem;
-  color: #718096;
+  color: #64748b;
+  border-right: 1px solid #cbd5e1; /* Línea que divide la lupa del texto */
+  display: flex;
+  align-items: center;
   user-select: none;
 }
 
@@ -39,15 +41,14 @@
   width: 100%;
   border: none;
   outline: none;
-  font-size: 1.05rem;
-  color: #2d3748;
+  font-size: 1rem;
+  color: #1e293b;
   background: transparent;
   font-family: inherit;
 }
 
 .catalogo-input-busqueda::placeholder {
-  color: #a0aec0;
-  font-size: 0.98rem;
+  color: #94a3b8;
 }
 
 /* Ocultar la clase accesible de solo lector */
