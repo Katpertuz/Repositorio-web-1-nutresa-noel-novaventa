@@ -1,3 +1,135 @@
+
+/* ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== */
+
+.catalogo-busqueda-seccion {
+  margin: 1.5rem 0 2rem 0;
+  width: 100%;
+}
+
+
+.catalogo-busqueda-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1; 
+  border-radius: 6px; 
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.catalogo-busqueda-bar:focus-within {
+  border-color: #d32f2f; 
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.12);
+}
+
+
+.catalogo-busqueda-icono {
+  font-size: 1.1rem;
+  padding-right: 0.75rem;
+  margin-right: 0.75rem;
+  color: #64748b;
+  border-right: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.catalogo-input-busqueda {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: #1e293b;
+  background: transparent;
+  font-family: inherit;
+}
+
+.catalogo-input-busqueda::placeholder {
+  color: #94a3b8;
+}
+
+
+.catalogo-solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== G1-BUS · HU 5.1: Motor de Búsqueda · fin ===== */
+
+
+/* ===== G1-BUS · Estilos de Vitrina de Productos (Katherin Ortega) · inicio ===== */
+
+/* Grilla de productos adaptable */
+.catalogo-grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Tarjeta individual de producto */
+.catalogo-producto-tarjeta {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalogo-producto-tarjeta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.catalogo-producto-titulo {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.catalogo-producto-descripcion {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.catalogo-producto-precio {
+  font-weight: bold;
+  color: #d32f2f;
+  font-size: 1.1rem;
+}
+
+/* Estado cuando no existen resultados */
+.catalogo-sin-resultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.5rem;
+  color: #64748b;
+  font-size: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 2px dashed #cbd5e1;
+}
+
+/* ===== G1-BUS · Estilos de Vitrina de Productos · fin ===== */
+
+
+
+
 /* ===== G1-MAR · Marca · inicio ===== */
 .catalogo-marcas-lista {
   display: flex;
