@@ -1,3 +1,73 @@
+
+/* ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== */
+
+/* Contenedor principal de la sección de búsqueda */
+.catalogo-busqueda-seccion {
+  margin: 1.5rem 0 2rem 0;
+  width: 100%;
+}
+
+/* Barra de búsqueda estilizada */
+.catalogo-busqueda-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Efecto al hacer foco (escribir) */
+.catalogo-busqueda-bar:focus-within {
+  border-color: #d32f2f; /* Color primario corporativo */
+  box-shadow: 0 4px 16px rgba(211, 47, 47, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Icono de la lupa */
+.catalogo-busqueda-icono {
+  font-size: 1.2rem;
+  margin-right: 0.75rem;
+  color: #718096;
+  user-select: none;
+}
+
+/* Campo de texto de entrada */
+.catalogo-input-busqueda {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1.05rem;
+  color: #2d3748;
+  background: transparent;
+  font-family: inherit;
+}
+
+.catalogo-input-busqueda::placeholder {
+  color: #a0aec0;
+  font-size: 0.98rem;
+}
+
+/* Ocultar la clase accesible de solo lector */
+.catalogo-solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== G1-BUS · HU 5.1: Motor de Búsqueda · fin ===== */
+
+
+
+
 /* ===== G1-MAR · Marca · inicio ===== */
 .catalogo-marcas-lista {
   display: flex;
