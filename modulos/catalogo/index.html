@@ -36,6 +36,55 @@
 <!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin ===== -->
 
 
+<!-- ===== G1-BUS · HU 5.2: Filtros Combinados (Katherin Ortega) · inicio ===== -->
+<aside class="catalogo-filtro-panel" aria-label="Panel de filtros combinados del catálogo">
+  <form id="catalogo-form-filtros" class="catalogo-filtro-form">
+    <h2 class="catalogo-filtro-titulo">Filtrar Productos</h2>
+
+   
+    <fieldset class="catalogo-filtro-grupo">
+      <legend class="catalogo-filtro-leyenda">Marca</legend>
+      <label for="catalogo-select-marca" class="catalogo-solo-lector">Seleccionar Marca</label>
+      <select id="catalogo-select-marca" class="catalogo-filtro-select" name="idMarca">
+        <option value="">Todas las marcas</option>
+      </select>
+    </fieldset>
+
+    
+    <fieldset class="catalogo-filtro-grupo">
+      <legend class="catalogo-filtro-leyenda">Categoría</legend>
+      <label for="catalogo-select-categoria" class="catalogo-solo-lector">Seleccionar Categoría</label>
+      <select id="catalogo-select-categoria" class="catalogo-filtro-select" name="idCategoria">
+        <option value="">Todas las categorías</option>
+      </select>
+    </fieldset>
+
+    
+    <fieldset class="catalogo-filtro-grupo">
+      <legend class="catalogo-filtro-leyenda">Presentación</legend>
+      <label for="catalogo-select-presentacion" class="catalogo-solo-lector">Seleccionar Presentación</label>
+      <select id="catalogo-select-presentacion" class="catalogo-filtro-select" name="idPresentacion">
+        <option value="">Todas las presentaciones</option>
+      </select>
+    </fieldset>
+
+    
+    <button type="button" id="catalogo-btn-limpiar-filtros" class="catalogo-filtro-btn-limpiar">
+      Restablecer filtros
+    </button>
+  </form>
+</aside>
+
+
+<section class="catalogo-productos-seccion" aria-label="Vitrina de productos">
+  <h2 class="catalogo-solo-lector">Listado de productos filtrados</h2>
+  <div id="catalogo-productos-contenedor" class="catalogo-grid-productos">
+    <p class="catalogo-cargando">Cargando productos del catálogo...</p>
+  </div>
+</section>
+<!-- ===== G1-BUS · HU 5.2: Filtros Combinados (Katherin Ortega) · fin ===== -->
+
+
 <!-- ===== G1-BUS · HU 5.1: Resultados de Búsqueda (Katherin Ortega) · inicio ===== -->
 <section class="catalogo-productos-seccion" aria-label="Vitrina de productos">
   <h2 class="catalogo-solo-lector">Listado de productos filtrados</h2>
