@@ -39,11 +39,11 @@
       { id: 10, descripcion: "Paquete x5 unidades", contenidoNeto: 420, unidadMedida: "g", precio: 11200, idProducto: 10 }
     ],
     imagenesProducto: [
-      { id: 1, url: "https://picsum.photos/seed/prod-1/640/480", textoAlternativo: "Galletas Noel Tradicional", esPrincipal: true, orden: 1, idProducto: 1 },
-      { id: 2, url: "https://picsum.photos/seed/prod-2/640/480", textoAlternativo: "Pasta Doria Espagueti", esPrincipal: true, orden: 1, idProducto: 2 },
-      { id: 3, url: "https://picsum.photos/seed/prod-3/640/480", textoAlternativo: "Cafe Colcafe Clasico", esPrincipal: true, orden: 1, idProducto: 3 },
-      { id: 4, url: "https://picsum.photos/seed/prod-4/640/480", textoAlternativo: "Chocolate Jet", esPrincipal: true, orden: 1, idProducto: 4 },
-      { id: 5, url: "https://picsum.photos/seed/prod-5/640/480", textoAlternativo: "Salchicha Ranchera", esPrincipal: true, orden: 1, idProducto: 5 }
+      { id: 1, url: "https://saltinnoel.com.co/wp-content/uploads/2017/07/12-15-FotosDestacadas-SaltinNoel-3.jpg", textoAlternativo: "Galletas Noel Tradicional", esPrincipal: true, orden: 1, idProducto: 1 },
+      { id: 2, url: "https://alimentosdoria.com/wp-content/uploads/2023/01/banner-spaghetti-1.png", textoAlternativo: "Pasta Doria Espagueti", esPrincipal: true, orden: 1, idProducto: 2 },
+      { id: 3, url: "https://colcafe.com/wp-content/uploads/2025/03/Dummie-actual.png", textoAlternativo: "Cafe Colcafe Clasico", esPrincipal: true, orden: 1, idProducto: 3 },
+      { id: 4, url: "https://chocolatesjet.com/wp-content/uploads/2021/01/03-06-BannerInternaJetTradicionalLaminaDorada-Jet.webp", textoAlternativo: "Chocolate Jet", esPrincipal: true, orden: 1, idProducto: 4 },
+      { id: 5, url: "https://ranchera.com.co/wp-content/uploads/2021/10/DUMMIE-RANCHERA-SCHA-PREMIUM-480G-1-330x0-c-default.webp", textoAlternativo: "Salchicha Ranchera", esPrincipal: true, orden: 1, idProducto: 5 }
     ]
   };
 
