@@ -163,3 +163,73 @@
   });
 })();
 // ===== G1-CAT · Categorías · fin =====
+
+
+// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio =====
+(function () {
+  "use strict";
+
+  function normalizarTexto(cadena) {
+    if (!cadena) return "";
+    return cadena
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+
+  function filtrarProductos(productos, termino) {
+    if (!termino) return productos; 
+
+    return productos.filter((producto) => {
+      const nombre = normalizarTexto(producto.nombreProducto || producto.nombre);
+      const descripcion = normalizarTexto(producto.descripcion || "");
+      return nombre.includes(termino) || descripcion.includes(termino);
+    });
+  }
+
+  function inicializarBuscador(productos) {
+    const formularioBusqueda = document.querySelector("#catalogo-form-busqueda");
+    const inputBusqueda = document.querySelector("#catalogo-input-busqueda");
+
+    if (!formularioBusqueda || !inputBusqueda) return;
+
+    
+    formularioBusqueda.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+    });
+
+    
+    inputBusqueda.addEventListener("input", (evento) => {
+      const terminoBusqueda = normalizarTexto(evento.target.value);
+      const resultados = filtrarProductos(productos, terminoBusqueda);
+
+      console.log(`[HU 5.1 Buscador] Resultados (${resultados.length}):`, resultados);
+
+      
+      document.dispatchEvent(
+        new CustomEvent("catalogo:busqueda-realizada", {
+          detail: { productosFiltrados: resultados, termino: terminoBusqueda },
+        })
+      );
+    });
+  }
+
+  async function iniciarBuscador() {
+    try {
+      const productos = await productoServicio.listarProductos();
+      inicializarBuscador(productos);
+    } catch (error) {
+      console.error("Error al cargar productos en el buscador:", error);
+    }
+  }
+
+ 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciarBuscador);
+  } else {
+    iniciarBuscador();
+  }
+})();
+// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
