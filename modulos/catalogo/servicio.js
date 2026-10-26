@@ -152,8 +152,14 @@ if (typeof productoServicio === 'undefined') {
     window.productoServicio = {};
 }
 
+// Método de la HU 3.1
 productoServicio.listarTodos = async function() {
     try {
+        if (typeof API_CONFIG !== 'undefined' && API_CONFIG.modo === 'api') {
+            const respuesta = await fetch(`${API_CONFIG.baseUrl}/productos`);
+            if (!respuesta.ok) throw new Error("Error al consultar API de productos");
+            return await respuesta.json();
+        }
         if (window.productosMockData && Array.isArray(window.productosMockData)) {
             return window.productosMockData;
         }
@@ -164,6 +170,27 @@ productoServicio.listarTodos = async function() {
     } catch (error) {
         console.error("Error en productoServicio.listarTodos:", error);
         throw error;
+    }
+};
+
+/**
+ * HU 3.2: Consulta un producto por su ID soportando Mock API con fetch, async y await
+ */
+productoServicio.buscarPorId = async function(id) {
+    try {
+        // Si el sistema está configurado en modo API, usa fetch asíncrono
+        if (typeof API_CONFIG !== 'undefined' && API_CONFIG.modo === 'api') {
+            const respuesta = await fetch(`${API_CONFIG.baseUrl}/productos/${id}`);
+            if (!respuesta.ok) return null;
+            return await respuesta.json();
+        }
+        
+        // Modo Local / Mock
+        const productos = await this.listarTodos();
+        return productos.find(p => Number(p.id) === Number(id)) || null;
+    } catch (error) {
+        console.error(`Error en productoServicio.buscarPorId(${id}):`, error);
+        return null;
     }
 };
 // ===== G1-PRO · Productos · fin =====
