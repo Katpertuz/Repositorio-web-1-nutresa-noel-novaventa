@@ -81,6 +81,53 @@
       </section>
       <!-- ===== G7-CUP · Cupón · fin ===== -->
 
+      <!-- ===== G7-CUP · Cupón · inicio - Duvan Tique ===== -->
+      <section class="contenedor-formulario" style="margin-top: 30px;">
+        <h2>Registrar Presentación Comercial</h2>
+
+        <form id="formCrearPresentacion" novalidate>
+          <div class="grupo-campo">
+            <label for="idPresentacion">idPresentacion</label>
+            <input 
+              type="text" 
+              id="idPresentacion" 
+              name="idPresentacion" 
+              required 
+              placeholder="Ej: PRES-001"
+            />
+          </div>
+
+          <div class="grupo-campo">
+            <label for="nombrePresentacion">nombrePresentacion</label>
+            <input 
+              type="text" 
+              id="nombrePresentacion" 
+              name="nombrePresentacion" 
+              required 
+              minlength="3" 
+              placeholder="Ej: Sazón Premium Blend"
+            />
+          </div>
+
+          <div class="grupo-campo">
+            <label for="pesoNeto">pesoNeto</label>
+            <input 
+              type="number" 
+              id="pesoNeto" 
+              name="pesoNeto" 
+              required 
+              min="0.01" 
+              step="0.01" 
+              placeholder="Ej: 500.00"
+            />
+          </div>
+
+          <button type="submit" id="btnGuardar">Guardar Presentación</button>
+        </form>
+
+        <div id="alertaFormulario" class="alerta" role="alert" aria-live="polite" hidden></div>
+      </section>
+      <!-- ===== G7-CUP · Cupón · fin ===== -->
       <!-- ===== G1-CAT · Categorías · inicio ===== -->
       <!-- Autor: Daniel Acevedo Yepes -->
       <!-- Historia de Usuario 2.1: Visualización del listado de categorías -->
