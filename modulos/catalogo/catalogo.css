@@ -460,6 +460,7 @@
 /* ===== G1-CAT · Categorías · fin ===== */
 
 /* ===== G1-PRO · Productos · inicio (Santiago Ocampo) ===== */
+/* Vitrina principal (HU 3.1) */
 .catalogo-vitrina-grid {
     display: flex;
     flex-wrap: wrap;
@@ -470,9 +471,9 @@
 
 .catalogo-producto-tarjeta {
     width: 220px;
-    border: 1px solid var(--linea); /* Variable oficial de sazon.css */
+    border: 1px solid var(--linea); /* Variable del :root */
     border-radius: 8px;
-    background-color: var(--card); /* Variable oficial de sazon.css */
+    background-color: var(--card); /* Variable del :root */
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
@@ -498,13 +499,77 @@
 .catalogo-producto-info h3 {
     margin: 0 0 8px 0;
     font-size: 1rem;
-    color: var(--tinta); /* Variable oficial de sazon.css */
+    color: var(--tinta); /* Variable del :root */
 }
 
 .catalogo-producto-meta {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--tinta); /* Variable oficial de sazon.css */
-    opacity: 0.75;
+    color: var(--texto); /* Variable del :root */
+}
+
+.catalogo-btn-detalle {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: var(--verde); /* Variable del :root */
+    color: var(--card); /* Variable del :root */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Modal Ficha Detallada (HU 3.2) */
+.catalogo-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.catalogo-modal-contenido {
+    background-color: var(--card); /* Variable del :root */
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    border: 1px solid var(--linea); /* Variable del :root */
+}
+
+.catalogo-modal-btn-cerrar {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--tinta); /* Variable del :root */
+}
+
+.catalogo-ficha-detalle figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+.catalogo-detalle-info h3 {
+    margin-top: 15px;
+    color: var(--tinta); /* Variable del :root */
+    font-size: 1rem;
+}
+
+.catalogo-detalle-info p,
+.catalogo-detalle-info ul {
+    color: var(--texto); /* Variable del :root */
 }
 /* ===== G1-PRO · Productos · fin ===== */
