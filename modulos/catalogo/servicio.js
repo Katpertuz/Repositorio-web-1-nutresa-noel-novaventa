@@ -144,5 +144,27 @@ productoServicio.listarProductos = async function () {
   }
   return await respuesta.json();
 };
+};
 // ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
+
+// ===== G1-PRO · Productos · inicio (Santiago Ocampo) =====
+if (typeof productoServicio === 'undefined') {
+    window.productoServicio = {};
+}
+
+productoServicio.listarTodos = async function() {
+    try {
+        if (window.productosMockData && Array.isArray(window.productosMockData)) {
+            return window.productosMockData;
+        }
+        if (window.catalogoMockData && Array.isArray(window.catalogoMockData.productos)) {
+            return window.catalogoMockData.productos;
+        }
+        return [];
+    } catch (error) {
+        console.error("Error en productoServicio.listarTodos:", error);
+        throw error;
+    }
+};
+// ===== G1-PRO · Productos · fin =====
 

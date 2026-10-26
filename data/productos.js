@@ -24,7 +24,9 @@
       { id: 7, nombre: "Pasta Doria Tornillos", descripcion: "Pasta corta tipo tornillo.", precioReferencia: 5600, activo: true, idMarca: 2, idCategoria: 2 },
       { id: 8, nombre: "Colcafe Cappuccino Vainilla", descripcion: "Mezcla instantanea sabor vainilla.", precioReferencia: 14800, activo: true, idMarca: 3, idCategoria: 3 },
       { id: 9, nombre: "Jet Leche Mani", descripcion: "Chocolate con mani.", precioReferencia: 2800, activo: true, idMarca: 4, idCategoria: 4 },
-      { id: 10, nombre: "Ranchera Premium", descripcion: "Linea premium de salchichas.", precioReferencia: 11200, activo: true, idMarca: 5, idCategoria: 5 }
+      { id: 10, nombre: "Ranchera Premium", descripcion: "Linea premium de salchichas.", precioReferencia: 11200, activo: true, idMarca: 5, idCategoria: 5 },
+      { id: 11, nombre: "Colección de postres con piña", descripcion: "Postre especial de prueba", precioReferencia: 15000, activo: true, idMarca: 1, idCategoria: 1 }
+
     ],
     presentaciones: [
       { id: 1, descripcion: "Paquete x12 unidades", contenidoNeto: 300, unidadMedida: "g", precio: 4500, idProducto: 1 },

@@ -406,5 +406,54 @@
     iniciarBuscador();
   }
 })();
+})();
 // ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
+
+// ===== G1-PRO · Productos · inicio (Santiago Ocampo) =====
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('catalogo-vitrina-contenedor')) {
+        renderizarVitrinaProductos();
+    }
+});
+
+async function renderizarVitrinaProductos() {
+    const contenedor = document.getElementById('catalogo-vitrina-contenedor');
+    if (!contenedor) return;
+
+    try {
+        const productos = await productoServicio.listarTodos();
+        contenedor.innerHTML = '';
+
+        if (!productos || productos.length === 0) {
+            contenedor.innerHTML = '<p>No hay productos disponibles para mostrar en la vitrina.</p>';
+            return;
+        }
+
+        productos.forEach(producto => {
+            const article = document.createElement('article');
+            article.className = 'catalogo-producto-tarjeta';
+
+            const nombre = producto.nombreProducto || producto.nombre || 'Producto Nutresa';
+            const idMarca = producto.idMarca || 'N/A';
+            const idCategoria = producto.idCategoria || 'N/A';
+            const imagen = producto.urlImagen || producto.imagen || 'https://picsum.photos/200';
+
+            article.innerHTML = `
+                <figure>
+                    <img src="${imagen}" alt="Imagen de ${nombre}">
+                </figure>
+                <div class="catalogo-producto-info">
+                    <h3>${nombre}</h3>
+                    <p class="catalogo-producto-meta">Marca ID: ${idMarca} | Categoría ID: ${idCategoria}</p>
+                </div>
+            `;
+            contenedor.appendChild(article);
+        });
+    } catch (error) {
+        console.error("Error al renderizar la vitrina de productos:", error);
+        contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar los productos.</p>';
+    }
+}
+// ===== G1-PRO · Productos · fin =====
+
 
