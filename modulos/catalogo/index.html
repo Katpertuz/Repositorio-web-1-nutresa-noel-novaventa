@@ -166,14 +166,20 @@
     <!-- ===== G1-PRO · Productos · inicio (Santiago Ocampo) ===== -->
 <section id="catalogo-vitrina-seccion" class="bloque-modulo">
     <h2>Vitrina de Productos Nutresa</h2>
-    <!-- Estilo en línea temporal de prueba -->
-    <div id="catalogo-vitrina-contenedor" class="catalogo-vitrina-grid" style="display: flex !important; flex-wrap: wrap !important; gap: 20px !important;">
+    <div id="catalogo-vitrina-contenedor" class="catalogo-vitrina-grid">
+    </div>
+
+    <!-- Modal para la Ficha Detallada del Producto (HU 3.2) -->
+    <div id="catalogo-modal-detalle" class="catalogo-modal-overlay" hidden>
+        <div class="catalogo-modal-contenido" role="dialog" aria-labelledby="modal-titulo-producto">
+            <button id="catalogo-modal-cerrar" class="catalogo-modal-btn-cerrar" aria-label="Cerrar modal">&times;</button>
+            <div id="catalogo-modal-body">
+                <!-- Se llena dinámicamente mediante JS -->
+            </div>
+        </div>
     </div>
 </section>
 <!-- ===== G1-PRO · Productos · fin ===== -->
-    
-
-
 
   </main>
 
