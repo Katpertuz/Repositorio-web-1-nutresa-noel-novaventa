@@ -460,7 +460,8 @@
 /* ===== G1-CAT · Categorías · fin ===== */
 
 /* ===== G1-PRO · Productos · inicio (Santiago Ocampo) ===== */
-/* Vitrina principal (HU 3.1) */
+
+/* --- HU 3.1: Vitrina Principal de Productos --- */
 .catalogo-vitrina-grid {
     display: flex;
     flex-wrap: wrap;
@@ -471,12 +472,14 @@
 
 .catalogo-producto-tarjeta {
     width: 220px;
-    border: 1px solid var(--linea); /* Variable del :root */
+    border: 1px solid var(--linea);
     border-radius: 8px;
-    background-color: var(--card); /* Variable del :root */
+    background-color: var(--card);
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
 .catalogo-producto-tarjeta figure {
@@ -494,33 +497,49 @@
 
 .catalogo-producto-info {
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
 }
 
 .catalogo-producto-info h3 {
     margin: 0 0 8px 0;
     font-size: 1rem;
-    color: var(--tinta); /* Variable del :root */
+    color: var(--tinta);
 }
 
 .catalogo-producto-meta {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--texto); /* Variable del :root */
+    color: var(--texto);
+    opacity: 0.85;
 }
 
+/* --- HU 3.2: Ficha Detallada del Producto (Modal y Botón) --- */
 .catalogo-btn-detalle {
-    margin-top: 10px;
-    padding: 6px 12px;
-    background-color: var(--verde); /* Variable del :root */
-    color: var(--card); /* Variable del :root */
+    margin-top: 12px;
+    padding: 8px 14px;
+    background-color: var(--verde);
+    color: var(--card);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 600;
+    transition: opacity 0.2s ease;
 }
 
-/* Modal Ficha Detallada (HU 3.2) */
+.catalogo-btn-detalle:hover {
+    opacity: 0.9;
+}
+
+/* Regla que fuerza a ocultar el modal cuando tiene el atributo 'hidden' */
+.catalogo-modal-overlay[hidden] {
+    display: none !important;
+}
+
+/* Estilos de la ventana modal emergente */
 .catalogo-modal-overlay {
     position: fixed;
     top: 0;
@@ -535,14 +554,16 @@
 }
 
 .catalogo-modal-contenido {
-    background-color: var(--card); /* Variable del :root */
+    background-color: var(--card);
     border-radius: 8px;
     padding: 24px;
     max-width: 500px;
     width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    border: 1px solid var(--linea); /* Variable del :root */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--linea);
 }
 
 .catalogo-modal-btn-cerrar {
@@ -553,23 +574,43 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--tinta); /* Variable del :root */
+    color: var(--tinta);
+    line-height: 1;
+}
+
+.catalogo-modal-btn-cerrar:hover {
+    color: var(--verde);
+}
+
+.catalogo-ficha-detalle figure {
+    margin: 10px 0 15px 0;
+    text-align: center;
 }
 
 .catalogo-ficha-detalle figure img {
     max-width: 100%;
-    height: auto;
+    max-height: 200px;
+    object-fit: cover;
     border-radius: 6px;
 }
 
 .catalogo-detalle-info h3 {
     margin-top: 15px;
-    color: var(--tinta); /* Variable del :root */
+    margin-bottom: 5px;
+    color: var(--tinta);
     font-size: 1rem;
 }
 
 .catalogo-detalle-info p,
 .catalogo-detalle-info ul {
-    color: var(--texto); /* Variable del :root */
+    color: var(--texto);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 5px 0;
 }
+
+.catalogo-detalle-info ul {
+    padding-left: 20px;
+}
+
 /* ===== G1-PRO · Productos · fin ===== */
