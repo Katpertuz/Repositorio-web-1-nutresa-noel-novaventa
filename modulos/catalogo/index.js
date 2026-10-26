@@ -408,3 +408,44 @@
 })();
 // ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
 
+// ===== G1-PRO · Productos · inicio (Santiago Ocampo) =====
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('catalogo-vitrina-contenedor')) {
+        renderizarVitrinaProductos();
+    }
+});
+
+async function renderizarVitrinaProductos() {
+    const contenedor = document.getElementById('catalogo-vitrina-contenedor');
+    
+    try {
+        const productos = await productoServicio.listarTodos();
+        contenedor.innerHTML = ''; 
+
+        if (!productos || productos.length === 0) {
+            contenedor.innerHTML = '<p>No hay productos disponibles en el catálogo.</p>';
+            return;
+        }
+
+        productos.forEach(producto => {
+            const article = document.createElement('article');
+            article.className = 'catalogo-producto-tarjeta';
+            
+            article.innerHTML = `
+                <figure>
+                    <img src="${producto.imagen || '../../assets/img/placeholder.jpg'}" alt="Presentación de ${producto.nombre}">
+                </figure>
+                <div class="catalogo-producto-info">
+                    <h3>${producto.nombre}</h3>
+                    <p class="catalogo-producto-meta">Marca ID: ${producto.idMarca} | Categoría ID: ${producto.idCategoria}</p>
+                </div>
+            `;
+            contenedor.appendChild(article);
+        });
+    } catch (error) {
+        console.error("Error al renderizar la vitrina de productos:", error);
+        contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar la vitrina de productos.</p>';
+    }
+}
+// ===== G1-PRO · Productos · fin =====
+
