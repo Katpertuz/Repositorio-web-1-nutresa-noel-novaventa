@@ -413,6 +413,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('catalogo-vitrina-contenedor')) {
         renderizarVitrinaProductos();
+        configurarEventosModal();
     }
 });
 
@@ -425,7 +426,7 @@ async function renderizarVitrinaProductos() {
         contenedor.innerHTML = '';
 
         if (!productos || productos.length === 0) {
-            contenedor.innerHTML = '<p>No hay productos disponibles para mostrar en la vitrina.</p>';
+            contenedor.innerHTML = '<p>No hay productos disponibles en la vitrina.</p>';
             return;
         }
 
@@ -445,15 +446,92 @@ async function renderizarVitrinaProductos() {
                 <div class="catalogo-producto-info">
                     <h3>${nombre}</h3>
                     <p class="catalogo-producto-meta">Marca ID: ${idMarca} | Categoría ID: ${idCategoria}</p>
+                    <button class="catalogo-btn-detalle" onclick="verDetalleProducto(${producto.id})">Ver detalle</button>
                 </div>
             `;
             contenedor.appendChild(article);
         });
     } catch (error) {
-        console.error("Error al renderizar la vitrina de productos:", error);
+        console.error("Error al renderizar la vitrina:", error);
         contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar los productos.</p>';
     }
 }
+
+async function verDetalleProducto(idProducto) {
+    const modal = document.getElementById('catalogo-modal-detalle');
+    const modalBody = document.getElementById('catalogo-modal-body');
+    if (!modal || !modalBody) return;
+
+    try {
+        modalBody.innerHTML = '<p>Cargando detalle del producto...</p>';
+        modal.hidden = false;
+
+        // 1. Petición asíncrona al servicio de productos mediante buscarPorId
+        const producto = await productoServicio.buscarPorId(idProducto);
+        if (!producto) {
+            modalBody.innerHTML = '<p role="alert">No se encontró la información del producto.</p>';
+            return;
+        }
+
+        const nombre = producto.nombreProducto || producto.nombre || 'Producto Nutresa';
+        const descripcion = producto.descripcion || 'Sin descripción disponible.';
+        const imagen = producto.urlImagen || producto.imagen || 'https://picsum.photos/200';
+
+        // 2. Consulta cruzada obligatoria al servicio externo de recetas (prohibido acceder a arreglos ajenos)
+        let listaRecetasHTML = '<li>No se encontraron recetas asociadas a este producto.</li>';
+        if (typeof recetaServicio !== 'undefined' && typeof recetaServicio.listarPorProducto === 'function') {
+            try {
+                const recetas = await recetaServicio.listarPorProducto(idProducto);
+                if (recetas && recetas.length > 0) {
+                    listaRecetasHTML = recetas.map(r => `<li>${r.nombreReceta || r.nombre}</li>`).join('');
+                }
+            } catch (e) {
+                console.warn("No se pudieron cargar las recetas asociadas:", e);
+            }
+        }
+
+        // Renderizado semántico de la ficha detallada en UTF-8
+        modalBody.innerHTML = `
+            <article class="catalogo-ficha-detalle">
+                <header>
+                    <h2 id="modal-titulo-producto">${nombre}</h2>
+                </header>
+                <figure>
+                    <img src="${imagen}" alt="Vista detallada de ${nombre}">
+                </figure>
+                <div class="catalogo-detalle-info">
+                    <h3>Descripción</h3>
+                    <p>${descripcion}</p>
+                    <h3>Recetas en las que aparece</h3>
+                    <ul>
+                        ${listaRecetasHTML}
+                    </ul>
+                </div>
+            </article>
+        `;
+    } catch (error) {
+        console.error("Error al cargar la ficha de detalle:", error);
+        modalBody.innerHTML = '<p role="alert">Error al cargar la ficha técnica del producto.</p>';
+    }
+}
+
+function configurarEventosModal() {
+    const btnCerrar = document.getElementById('catalogo-modal-cerrar');
+    const modal = document.getElementById('catalogo-modal-detalle');
+    
+    if (btnCerrar && modal) {
+        btnCerrar.addEventListener('click', () => {
+            modal.hidden = true;
+        });
+        
+        window.addEventListener('click', (evento) => {
+            if (evento.target === modal) {
+                modal.hidden = true;
+            }
+        });
+    }
+}
 // ===== G1-PRO · Productos · fin =====
+
 
 
