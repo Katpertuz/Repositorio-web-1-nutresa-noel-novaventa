@@ -16,169 +16,123 @@
       <p>Base lista para desarrollar historias de usuario del catálogo.</p>
       <div id="catalogo-estado" class="mensaje-estado" role="status"></div>
 
-<!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== -->
-<section class="catalogo-busqueda-seccion" aria-label="Búsqueda de productos">
-  <form id="catalogo-form-busqueda" class="catalogo-busqueda-bar" role="search">
-    <label for="catalogo-input-busqueda" class="catalogo-solo-lector">
-      Buscar productos por nombre o descripción
-    </label>
-    <span class="catalogo-busqueda-icono" aria-hidden="true">🔍</span>
-    <input 
-      type="search" 
-      id="catalogo-input-busqueda" 
-      class="catalogo-input-busqueda" 
-      placeholder="Buscar por producto, marca o descripción..." 
-      autocomplete="off"
-      aria-label="Buscar productos en el catálogo"
-    >
-  </form>
-</section>
-<!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin ===== -->
+ <!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio ===== -->
+      <section class="catalogo-busqueda-seccion" aria-label="Búsqueda de productos en tiempo real">
+        <form id="catalogo-form-busqueda" class="catalogo-busqueda-bar" role="search">
+          <label for="catalogo-input-busqueda" class="catalogo-solo-lector">
+            Buscar productos por nombre o descripción
+          </label>
+          <span class="catalogo-busqueda-icono" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="catalogo-input-busqueda"
+            class="catalogo-input-busqueda"
+            placeholder="Buscar por producto, marca o descripción..."
+            autocomplete="off"
+            aria-label="Buscar productos en el catálogo"
+          >
+        </form>
+      </section>
+      <!-- ===== G1-BUS · HU 5.1: Motor de Búsqueda · fin ===== -->
 
-
-<!-- ===== G1-BUS · HU 5.1: Resultados de Búsqueda (Katherin Ortega) · inicio ===== -->
-<section class="catalogo-productos-seccion" aria-label="Vitrina de productos">
-  <h2 class="catalogo-solo-lector">Listado de productos filtrados</h2>
-  
-  
-  <div id="catalogo-productos-contenedor" class="catalogo-grid-productos">
-    <p class="catalogo-cargando">Cargando productos del catálogo...</p>
-  </div>
-</section>
-<!-- ===== G1-BUS · HU 5.1: Resultados de Búsqueda · fin ===== -->
-
-      <!-- ===== G1-MAR · Marca · inicio ===== -->
+      <!-- ===== G1-MAR · HU 1.1: Filtro de Marcas Corporativas (María Paz Urrego) · inicio ===== -->
       <section class="catalogo-marcas" aria-labelledby="catalogo-marcas-titulo">
-        <h2 id="catalogo-marcas-titulo" class="catalogo-solo-lector">Filtrar por marca</h2>
+        <h2 id="catalogo-marcas-titulo" class="catalogo-solo-lector">Filtrar por marca corporativa</h2>
         <div id="catalogo-marcas"></div>
         <p id="catalogo-error" class="catalogo-error" role="alert" hidden></p>
       </section>
-      <!-- ===== G1-MAR · Marca · fin ===== -->
-       
-       <!-- ===== G7-CUP · Cupón · inicio ===== -->
-       <section class="catalogo-presentaciones" aria-labelledby="catalogo-presentaciones-titulo">
-        <h2 id="catalogo-presentaciones-titulo" class="catalogo-solo-lector">Gestión de Presentaciones y Empaques</h2>
-        <p>Listado de presentaciones comerciales de productos Nutresa.</p>
+      <!-- ===== G1-MAR · Filtro de Marcas · fin ===== -->
+
+      <!-- ===== G1-PRO / G1-BUS · HU 3.1 & HU 5.2: Vitrina de Productos (Santiago Ocampo & Katherin Ortega) · inicio ===== -->
+      <section class="catalogo-productos-seccion" aria-label="Vitrina de productos Nutresa">
+        <h2>Vitrina de Productos Nutresa</h2>
+        <!-- Contenedor unificado para renderizado reactivo de la vitrina -->
+        <div id="catalogo-productos-contenedor" class="catalogo-grid-productos">
+          <p class="catalogo-cargando">Cargando productos del catálogo...</p>
+        </div>
+      </section>
+      <!-- ===== G1-PRO / G1-BUS · Vitrina de Productos · fin ===== -->
+
+      <!-- ===== G1-CAT · HU 2.1 & 2.2: Maestro de Categorías (Daniel Acevedo) · inicio ===== -->
+      <section class="catalogo-categorias-seccion" aria-labelledby="catalogo-categorias-titulo">
+        <form id="catalogo-form-categoria" class="catalogo-formulario">
+          <fieldset>
+            <legend>Registrar Nueva Categoría</legend>
+            <div class="catalogo-form-grupo">
+              <label for="idCategoria">ID de la Categoría</label>
+              <input type="number" id="idCategoria" name="idCategoria" required min="1" placeholder="Ej: 6">
+            </div>
+            <div class="catalogo-form-grupo">
+              <label for="nombreCategoria">Nombre de la Categoría</label>
+              <input type="text" id="nombreCategoria" name="nombreCategoria" required placeholder="Ej: Bebidas e Infusiones">
+            </div>
+            <button type="submit" class="catalogo-btn-guardar">Guardar Categoría</button>
+          </fieldset>
+          <div id="catalogo-categoria-alerta" role="alert" hidden></div>
+        </form>
+
+        <h2 id="catalogo-categorias-titulo">Categorías de Productos</h2>
+        <div id="catalogo-categorias-contenedor" class="catalogo-grid-categorias">
+          <p>Cargando categorías...</p>
+        </div>
+      </section>
+      <!-- ===== G1-CAT · Maestro de Categorías · fin ===== -->
+
+      <!-- ===== G7-CUP / G1-PRE · HU 4.1 & 4.2: Presentaciones Comerciales (Carlos Duván Tique) · inicio ===== -->
+      <section class="catalogo-presentaciones" aria-labelledby="catalogo-presentaciones-titulo">
+        <h2 id="catalogo-presentaciones-titulo">Presentaciones Comerciales y Empaques</h2>
+        <p>Listado de formatos de empaque y contenido neto de productos Nutresa.</p>
+        
         <div class="catalogo-tabla-responsive">
           <table class="catalogo-presentacion-tabla">
-            <caption>Listado de presentaciones comerciales y empaques</caption>
+            <caption>Presentaciones comerciales registradas en el catálogo</caption>
             <thead>
               <tr>
                 <th scope="col">Código</th>
                 <th scope="col">Nombre Presentación</th>
                 <th scope="col">Contenido Neto</th>
-                <th scope="col">Medida</th>
-                <th scope="col">Empaque</th>
                 <th scope="col">Descripción</th>
+                <th scope="col">Empaque</th>
+                <th scope="col">Detalle</th>
                 <th scope="col">Precio</th>
               </tr>
             </thead>
             <tbody id="tabla-presentaciones-body">
-
+              <!-- Inyección dinámica desde servicio.js/index.js -->
             </tbody>
           </table>
         </div>
       </section>
-      <!-- ===== G7-CUP · Cupón · fin ===== -->
 
-      <!-- ===== G7-CUP · Cupón · inicio - Duvan Tique ===== -->
-      <section class="contenedor-formulario" style="margin-top: 30px;">
+      <!-- Formulario de registro de Presentaciones -->
+      <section class="contenedor-formulario" style="margin-top: 2rem;">
         <h2>Registrar Presentación Comercial</h2>
-
         <form id="formCrearPresentacion" novalidate>
           <div class="grupo-campo">
-            <label for="idPresentacion">idPresentacion</label>
-            <input 
-              type="text" 
-              id="idPresentacion" 
-              name="idPresentacion" 
-              required 
-              placeholder="Ej: PRES-001"
-            />
+            <label for="idPresentacion">ID Presentación</label>
+            <input type="text" id="idPresentacion" name="idPresentacion" required placeholder="Ej: PRES-011" />
           </div>
-
           <div class="grupo-campo">
-            <label for="nombrePresentacion">nombrePresentacion</label>
-            <input 
-              type="text" 
-              id="nombrePresentacion" 
-              name="nombrePresentacion" 
-              required 
-              minlength="3" 
-              placeholder="Ej: Sazón Premium Blend"
-            />
+            <label for="nombrePresentacion">Nombre de Presentación</label>
+            <input type="text" id="nombrePresentacion" name="nombrePresentacion" required minlength="3" placeholder="Ej: Doria Espagueti 500g" />
           </div>
-
           <div class="grupo-campo">
-            <label for="pesoNeto">pesoNeto</label>
-            <input 
-              type="number" 
-              id="pesoNeto" 
-              name="pesoNeto" 
-              required 
-              min="0.01" 
-              step="0.01" 
-              placeholder="Ej: 500.00"
-            />
+            <label for="pesoNeto">Peso Neto (g/ml)</label>
+            <input type="number" id="pesoNeto" name="pesoNeto" required min="0.01" step="0.01" placeholder="Ej: 500.00" />
           </div>
-
           <button type="submit" id="btnGuardar">Guardar Presentación</button>
         </form>
-
         <div id="alertaFormulario" class="alerta" role="alert" aria-live="polite" hidden></div>
       </section>
-      <!-- ===== G7-CUP · Cupón · fin ===== -->
-      <!-- ===== G1-CAT · Categorías · inicio ===== -->
-      <!-- Autor: Daniel Acevedo Yepes -->
-      <!-- Historia de Usuario 2.1: Visualización del listado de categorías -->
-      <section class="catalogo-categorias-seccion">
-          <!-- Formulario de creación HU 2.2 -Autor Daniel Acevedo - fin -->
-          <form id="catalogo-form-categoria" class="catalogo-formulario">
-              <fieldset>
-                  <legend>Registrar Nueva Categoría</legend>
-                  
-                  <div class="catalogo-form-grupo">
-                      <label for="idCategoria">ID de la Categoría</label>
-                      <input type="number" id="idCategoria" name="idCategoria" required min="1">
-                  </div>
-                  
-                  <div class="catalogo-form-grupo">
-                      <label for="nombreCategoria">Nombre de la Categoría</label>
-                      <input type="text" id="nombreCategoria" name="nombreCategoria" required>
-                  </div>
-                  
-                  <button type="submit" class="catalogo-btn-guardar">Guardar Categoría</button>
-              </fieldset>
-              
-              <!-- Contenedor para notificaciones de error o éxito -->
-              <div id="catalogo-categoria-alerta" role="alert" hidden></div>
-          </form>       
-           <!-- Formulario de creación HU 2.2 -Autor Daniel Acevedo - fin-->
-          <h2>Categorías de Productos</h2>
-          <div id="catalogo-categorias-contenedor" class="catalogo-grid-categorias">
-              <p>Cargando categorías...</p>
-          </div>
-      </section>
-      <!-- ===== G1-CAT · Categorías · fin ===== -->
+      <!-- ===== G7-CUP / G1-PRE · Presentaciones Comerciales · fin ===== -->
 
     </section>
-
-    <!-- ===== G1-PRO · Productos · inicio (Santiago Ocampo) ===== -->
-<section id="catalogo-vitrina-seccion" class="bloque-modulo">
-    <h2>Vitrina de Productos Nutresa</h2>
-    <!-- Estilo en línea temporal de prueba -->
-    <div id="catalogo-vitrina-contenedor" class="catalogo-vitrina-grid" style="display: flex !important; flex-wrap: wrap !important; gap: 20px !important;">
-    </div>
-</section>
-<!-- ===== G1-PRO · Productos · fin ===== -->
-    
-
-
-
   </main>
 
+  <!-- Pie de página inyectado dinámicamente por layout.js -->
   <footer data-layout="footer"></footer>
 
+  <!-- Carga ordenada de datos mock y scripts del proyecto -->
   <script src="../../services/api.config.js"></script>
   <script src="../../data/usuario.js"></script>
   <script src="../../data/productos.js"></script>
