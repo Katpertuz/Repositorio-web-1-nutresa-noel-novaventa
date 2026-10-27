@@ -1,296 +1,172 @@
+// ===== Módulo Catálogo Sazón - Controlador Principal =====
+
+// 1. Carga inicial de la estructura base
 (function () {
+  "use strict";
   async function iniciarCatalogo() {
-    var estado = document.getElementById("catalogo-estado");
-    if (!estado) {
-      return;
-    }
+    const estado = document.getElementById("catalogo-estado");
+    if (!estado) return;
     try {
-      await window.catalogoServicio.listarTodos();
-      estado.textContent = "Estructura base del módulo catálogo cargada.";
+      if (window.catalogoServicio && typeof window.catalogoServicio.listarTodos === "function") {
+        await window.catalogoServicio.listarTodos();
+      }
+      estado.textContent = "Estructura base del módulo catálogo cargada correctamente.";
     } catch (error) {
       estado.setAttribute("role", "alert");
       estado.textContent = "No fue posible cargar la base del catálogo.";
       console.error(error);
     }
   }
-
   document.addEventListener("DOMContentLoaded", iniciarCatalogo);
 })();
 
-// ===== G1-MAR · Marca · inicio =====
+// ===== G1-MAR · Gestión de Marcas =====
 (function () {
-  const TODAS = 'todas';
-  const contenedor = document.getElementById('catalogo-marcas');
-  const estado = document.getElementById('catalogo-estado');
-  const mensajeError = document.getElementById('catalogo-error');
+  "use strict";
+  const TODAS = "todas";
+  const contenedor = document.getElementById("catalogo-marcas");
+  const estado = document.getElementById("catalogo-estado");
+  const mensajeError = document.getElementById("catalogo-error");
   let marcaActiva = TODAS;
 
+  if (!contenedor) return;
+
   function crearItem(texto, valor) {
-    const item = document.createElement('li');
-    const boton = document.createElement('button');
-    boton.type = 'button';
-    boton.className = 'catalogo-marca-btn';
+    const item = document.createElement("li");
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "catalogo-marca-btn";
     boton.dataset.marca = valor;
-    boton.textContent = texto.normalize('NFC');
-    boton.setAttribute('aria-pressed', valor === marcaActiva ? 'true' : 'false');
-    if (valor === marcaActiva) {
-      boton.classList.add('catalogo-marca-btn--activa');
-    }
+    boton.textContent = String(texto).normalize("NFC");
+    boton.setAttribute("aria-pressed", valor === marcaActiva ? "true" : "false");
+    if (valor === marcaActiva) boton.classList.add("catalogo-marca-btn--activa");
     item.appendChild(boton);
     return item;
   }
 
   function renderizarMarcas(marcas) {
-    const lista = document.createElement('ul');
-    lista.className = 'catalogo-marcas-lista';
-    lista.appendChild(crearItem('Todas las marcas', TODAS));
-    marcas.forEach(function (marca) {
-      lista.appendChild(crearItem(marca.nombre, String(marca.id)));
-    });
+    const lista = document.createElement("ul");
+    lista.className = "catalogo-marcas-lista";
+    lista.appendChild(crearItem("Todas las marcas", TODAS));
+    marcas.forEach((m) => lista.appendChild(crearItem(m.nombre, String(m.id))));
     contenedor.replaceChildren(lista);
   }
 
   function seleccionarMarca(boton) {
     marcaActiva = boton.dataset.marca;
-    contenedor.querySelectorAll('.catalogo-marca-btn').forEach(function (b) {
+    contenedor.querySelectorAll(".catalogo-marca-btn").forEach((b) => {
       const activo = b === boton;
-      b.classList.toggle('catalogo-marca-btn--activa', activo);
-      b.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      b.classList.toggle("catalogo-marca-btn--activa", activo);
+      b.setAttribute("aria-pressed", activo ? "true" : "false");
     });
-    estado.textContent = 'Mostrando: ' + boton.textContent;
+    if (estado) estado.textContent = "Mostrando: " + boton.textContent;
 
-    // Para que otras historias (tarjetas de productos) puedan filtrar
-    document.dispatchEvent(new CustomEvent('catalogo:marca-seleccionada', {
-      detail: { idMarca: marcaActiva === TODAS ? null : Number(marcaActiva) },
-    }));
+    // Evento personalizado para comunicar el filtro a HU 5.2
+    document.dispatchEvent(
+      new CustomEvent("catalogo:marca-seleccionada", {
+        detail: { idMarca: marcaActiva === TODAS ? null : Number(marcaActiva) }
+      })
+    );
   }
 
-  contenedor.addEventListener('click', function (evento) {
-    const boton = evento.target.closest('.catalogo-marca-btn');
-    if (boton) {
-      seleccionarMarca(boton);
-    }
+  contenedor.addEventListener("click", (evento) => {
+    const boton = evento.target.closest(".catalogo-marca-btn");
+    if (boton) seleccionarMarca(boton);
   });
 
   async function iniciarMarcas() {
     try {
-      const marcas = await productoServicio.listarMarcas();
-      renderizarMarcas(marcas);
+      if (window.productoServicio && typeof window.productoServicio.listarMarcas === "function") {
+        const marcas = await window.productoServicio.listarMarcas();
+        renderizarMarcas(marcas);
+      }
     } catch (error) {
-      console.error(error);
-      mensajeError.textContent = 'No pudimos cargar las marcas. Intenta de nuevo más tarde.';
-      mensajeError.hidden = false;
+      console.error("Error en marcas:", error);
+      if (mensajeError) {
+        mensajeError.textContent = "No pudimos cargar las marcas.";
+        mensajeError.hidden = false;
+      }
     }
   }
 
-  iniciarMarcas();
+  document.addEventListener("DOMContentLoaded", iniciarMarcas);
 })();
-// ===== G1-MAR · Marca · fin =====
 
-// ===== G7-CUP · Cupón · inicio - Duvan Tique =====
+// ===== G7-CUP / G1-PRE · Presentaciones Comerciales =====
 (function () {
-    const form = document.getElementById('formCrearPresentacion');
-    const alerta = document.getElementById('alertaFormulario');
-
-    if (!form || !alerta) {
-        return;
-    }
-
-    form.addEventListener('submit', async function (evento) {
-        evento.preventDefault();
-
-        const idPresentacion = document.getElementById('idPresentacion').value.trim();
-        const nombrePresentacion = document.getElementById('nombrePresentacion').value.trim();
-        const pesoNeto = parseFloat(document.getElementById('pesoNeto').value);
-
-        if (!idPresentacion || !nombrePresentacion || isNaN(pesoNeto) || pesoNeto <= 0) {
-            alerta.className = 'alerta alerta-error';
-            alerta.textContent = 'Por favor, completa todos los campos obligatorios correctamente.';
-            alerta.hidden = false;
-            return;
-        }
-
-        const nuevaPresentacion = {
-            idPresentacion,
-            nombrePresentacion,
-            pesoNeto
-        };
-
-        try {
-            if (window.catalogoServicio && typeof window.catalogoServicio.crearPresentacion === 'function') {
-                await window.catalogoServicio.crearPresentacion(nuevaPresentacion);
-            }
-
-            alerta.className = 'alerta alerta-exito';
-            alerta.textContent = '¡Presentación comercial registrada con éxito!';
-            alerta.hidden = false;
-            form.reset();
-
-            document.dispatchEvent(new CustomEvent('catalogo:presentacion-creada', {
-                detail: nuevaPresentacion
-            }));
-
-        } catch (error) {
-            console.error(error);
-            alerta.className = 'alerta alerta-error';
-            alerta.textContent = 'No fue posible registrar la presentación. Intenta de nuevo más tarde.';
-            alerta.hidden = false;
-        }
-    });
-// ===== G7-CUP · Cupón · inicio =====
-(function () {
-  const tbody = document.getElementById('tabla-presentaciones-body');
-  const estado = document.getElementById('catalogo-estado');
-
-  const informacionProductos = {
-    1: { nombre: 'Galletas Noel Tradicional (Gramos)', empaque: 'Paquete', descripcion: 'Galleta dulce tradicional para lonchera.' },
-    2: { nombre: 'Pasta Doria Espagueti (Gramos)', empaque: 'Bolsa', descripcion: 'Pasta larga para preparaciones clasicas.' },
-    3: { nombre: 'Cafe Colcafe Clasico (Gramos)', empaque: 'Frasco', descripcion: 'Cafe soluble tradicional.' },
-    4: { nombre: 'Chocolate Jet (Gramos)', empaque: 'Barra', descripcion: 'Chocolate de leche en barra.' },
-    5: { nombre: 'Salchicha Ranchera (Gramos)', empaque: 'Paquete', descripcion: 'Salchicha lista para cocinar.' },
-    6: { nombre: 'Galletas Festival Vainilla', empaque: 'Paquete', descripcion: 'Galleta rellena sabor vainilla.' },
-    7: { nombre: 'Pasta Doria Tornillos', empaque: 'Bolsa', descripcion: 'Pasta corta tipo tornillo.' },
-    8: { nombre: 'Colcafe Cappuccino Vainilla', empaque: 'Caja', descripcion: 'Mezcla instantanea sabor vainilla.' },
-    9: { nombre: 'Jet Leche Mani', empaque: 'Barra', descripcion: 'Chocolate con mani.' },
-    10: { nombre: 'Ranchera Premium', empaque: 'Paquete', descripcion: 'Linea premium de salchichas.' }
-  };
-
-  function formatearPrecio(precio) {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-      minimumFractionDigits: 0
-    }).format(precio);
-  }
-
-  function renderizarPresentaciones(presentaciones) {
-    if (!tbody) return;
-
-    tbody.innerHTML = ''; 
-
-    presentaciones.forEach(function (item) {
-      const infoExtra = informacionProductos[item.id] || {
-        nombre: 'Presentación Nutresa',
-        empaque: 'Empaque',
-        descripcion: item.descripcion
-      };
-
-      const codigoStr = `G1-PRE-${String(item.id).padStart(3, '0')}`;
-      const tr = document.createElement('tr');
-
-      tr.innerHTML = `
-        <td>${codigoStr}</td>
-        <td>${infoExtra.nombre}</td>
-        <td>${item.contenidoNeto}${item.unidadMedida}</td>
-        <td>${item.descripcion}</td>
-        <td>${infoExtra.empaque}</td>
-        <td>${infoExtra.descripcion}</td>
-        <td>${formatearPrecio(item.precio)}</td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-    if (estado) {
-      estado.textContent = `Listado de las ${presentaciones.length} presentaciones comerciales cargado correctamente.`;
-    }
-  }
+  "use strict";
+  const tbody = document.getElementById("tabla-presentaciones-body");
 
   async function iniciarPresentaciones() {
+    if (!tbody) return;
     try {
-      const presentaciones = await presentacionServicio.listarPresentaciones();
-      renderizarPresentaciones(presentaciones);
+      if (window.presentacionServicio && typeof window.presentacionServicio.listarPresentaciones === "function") {
+        const presentaciones = await window.presentacionServicio.listarPresentaciones();
+        tbody.innerHTML = "";
+        presentaciones.forEach((item) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>G1-PRE-${String(item.id || 1).padStart(3, "0")}</td>
+            <td>${item.nombre || "Presentación Nutresa"}</td>
+            <td>${item.contenidoNeto || item.pesoNeto || "N/A"}</td>
+            <td>${item.unidadMedida || "g"}</td>
+            <td>Empaque Estándar</td>
+            <td>${item.descripcion || "Sin descripción"}</td>
+            <td>$${Number(item.precio || 0).toLocaleString("es-CO")}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
     } catch (error) {
-      console.error('Error al cargar las presentaciones:', error);
+      console.error("Error al cargar las presentaciones:", error);
     }
   }
 
-  iniciarPresentaciones();
+  document.addEventListener("DOMContentLoaded", iniciarPresentaciones);
 })();
-// ===== G7-CUP · Cupón · fin =====
-// ===== G1-CAT · Categorías · inicio =====
-// Autor: Daniel Acevedo Yepes
-// Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías
+
+// ===== G1-CAT · Maestro de Categorías =====
 (function () {
+  "use strict";
   async function renderizarCategorias() {
-    const contenedor = document.getElementById('catalogo-categorias-contenedor');
-    
+    const contenedor = document.getElementById("catalogo-categorias-contenedor");
     if (!contenedor) return;
-    
+
     try {
-        const categorias = await productoServicio.listarCategorias();
-        contenedor.innerHTML = '';
+      if (window.productoServicio && typeof window.productoServicio.listarCategorias === "function") {
+        const categorias = await window.productoServicio.listarCategorias();
+        contenedor.innerHTML = "";
 
         if (!categorias || categorias.length === 0) {
-            contenedor.innerHTML = '<p role="alert">No hay categorías disponibles.</p>';
-            return;
+          contenedor.innerHTML = '<p role="alert">No hay categorías disponibles.</p>';
+          return;
         }
 
-        categorias.forEach(function(categoria) {
-            const article = document.createElement('article');
-            article.className = 'catalogo-categoria-card';
-            
-            // Soporte estricto para caracteres especiales (tildes, eñes)
-            const nombreSeguro = categoria.nombre.normalize('NFC');
-            
-            article.innerHTML = `<h3>${nombreSeguro}</h3>`;
-            
-            contenedor.appendChild(article);
+        categorias.forEach((cat) => {
+          const article = document.createElement("article");
+          article.className = "catalogo-categoria-card";
+          article.innerHTML = `<h3>${String(cat.nombre || cat.nombreCategoria).normalize("NFC")}</h3>`;
+          contenedor.appendChild(article);
         });
-
+      }
     } catch (error) {
-        console.error('Error al cargar categorías:', error);
-        contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar las categorías.</p>';
+      console.error("Error al cargar categorías:", error);
+      contenedor.innerHTML = '<p role="alert">Error al cargar las categorías.</p>';
     }
   }
 
-  function inicializarFormulario() {
-      const formCategoria = document.getElementById('catalogo-form-categoria');
-      const alertaCategoria = document.getElementById('catalogo-categoria-alerta');
-
-      if (formCategoria) {
-          formCategoria.addEventListener('submit', async function (evento) {
-              evento.preventDefault();
-              alertaCategoria.hidden = true;
-
-              const formData = new FormData(formCategoria);
-              const nuevaCategoria = {
-                  idCategoria: Number(formData.get('idCategoria')),
-                  nombreCategoria: formData.get('nombreCategoria')
-              };
-
-              try {
-                  await productoServicio.crearCategoria(nuevaCategoria);
-                  
-                  alertaCategoria.textContent = 'Categoría registrada exitosamente.';
-                  alertaCategoria.className = 'catalogo-alerta-exito';
-                  alertaCategoria.hidden = false;
-                  
-                  formCategoria.reset();
-                  renderizarCategorias(); // Refresca el listado inmediatamente
-              } catch (error) {
-                  console.error(error);
-                  alertaCategoria.textContent = 'Fallo al registrar. Verifica los datos ingresados.';
-                  alertaCategoria.className = 'catalogo-alerta-error';
-                  alertaCategoria.hidden = false;
-              }
-          });
-      }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-      renderizarCategorias();
-      inicializarFormulario();
-  });
+  document.addEventListener("DOMContentLoaded", renderizarCategorias);
 })();
-// ===== G1-CAT · Categorías · fin =====
 
-
-// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio =====
+// ===== G1-BUS · Katherin Ortega (HU 5.1: Buscador & HU 5.2: Filtros Combinados y Vitrina) · inicio =====
 (function () {
   "use strict";
 
-  
+  let productosGlobales = [];
+  let filtroMarcaActivo = null;
+  let terminoBusquedaActivo = "";
+
+  // 1. Normalización de cadenas de texto (HU 5.1)
   function normalizarTexto(cadena) {
     if (!cadena) return "";
     return cadena
@@ -300,58 +176,64 @@
       .trim();
   }
 
-  function filtrarProductos(productos, termino) {
-    if (!termino) return productos;
+  // 2. Algoritmo de Filtrado Combinado (HU 5.1 + HU 5.2)
+  function aplicarFiltrosCombinados() {
+    return productosGlobales.filter((prod) => {
+      // Coincidencia por texto libre (HU 5.1)
+      const nombre = normalizarTexto(prod.nombreProducto || prod.nombre);
+      const descripcion = normalizarTexto(prod.descripcion || "");
+      const coincideTexto =
+        !terminoBusquedaActivo ||
+        nombre.includes(terminoBusquedaActivo) ||
+        descripcion.includes(terminoBusquedaActivo);
 
-    return productos.filter((producto) => {
-      const nombre = normalizarTexto(producto.nombreProducto || producto.nombre);
-      const descripcion = normalizarTexto(producto.descripcion || "");
-      return nombre.includes(termino) || descripcion.includes(termino);
+      // Coincidencia por filtro de Marca (HU 5.2)
+      const coincideMarca =
+        !filtroMarcaActivo || Number(prod.idMarca) === Number(filtroMarcaActivo);
+
+      return coincideTexto && coincideMarca;
     });
   }
 
-  
-  function renderizarProductos(productos) {
-    const contenedor = document.querySelector("#catalogo-productos-contenedor");
-    if (!contenedor) return;
+  // 3. Renderizado Semántico de la Vitrina de Productos(Santiago)
+  function renderizarVitrina(productos) {
+    const contenedor =
+      document.querySelector("#catalogo-productos-contenedor") ||
+      document.querySelector("#catalogo-vitrina-contenedor");
 
-    
+    if (!contenedor) return;
     contenedor.replaceChildren();
 
-   
     if (!productos || productos.length === 0) {
-      const mensajeVacio = document.createElement("p");
+      const mensajeVacio = document.createElement("div");
       mensajeVacio.className = "catalogo-sin-resultados";
-      mensajeVacio.setAttribute("role", "status");
-      mensajeVacio.textContent = "No se encontraron productos que coincidan con tu búsqueda.";
+      mensajeVacio.setAttribute("role", "alert");
+      mensajeVacio.textContent = "No se encontraron productos que coincidan con los criterios seleccionados.";
       contenedor.appendChild(mensajeVacio);
       return;
     }
 
-    
     const fragmento = document.createDocumentFragment();
 
-    productos.forEach((producto) => {
+    productos.forEach((prod) => {
       const tarjeta = document.createElement("article");
       tarjeta.className = "catalogo-producto-tarjeta";
 
-      const titulo = document.createElement("h3");
-      titulo.className = "catalogo-producto-titulo";
-      titulo.textContent = producto.nombreProducto || producto.nombre || "Producto sin nombre";
+      const nombre = prod.nombreProducto || prod.nombre || "Producto Nutresa";
+      const desc = prod.descripcion || "Descripción no disponible.";
+      const imagen = prod.urlImagen || prod.imagen || "https://picsum.photos/200";
+      const precio = prod.precio ? `$${Number(prod.precio).toLocaleString("es-CO")}` : "";
 
-      const descripcion = document.createElement("p");
-      descripcion.className = "catalogo-producto-descripcion";
-      descripcion.textContent = producto.descripcion || "Sin descripción disponible.";
-
-      tarjeta.appendChild(titulo);
-      tarjeta.appendChild(descripcion);
-
-      if (producto.precio) {
-        const precio = document.createElement("span");
-        precio.className = "catalogo-producto-precio";
-        precio.textContent = `$${Number(producto.precio).toLocaleString("es-CO")}`;
-        tarjeta.appendChild(precio);
-      }
+      tarjeta.innerHTML = `
+        <figure style="margin:0;">
+          <img src="${imagen}" alt="${nombre}" style="width:100%; height:140px; object-fit:cover; border-radius:6px;" loading="lazy" />
+        </figure>
+        <div class="catalogo-producto-info" style="padding: 0.75rem 0 0 0;">
+          <h3 class="catalogo-producto-titulo">${nombre}</h3>
+          <p class="catalogo-producto-descripcion">${desc}</p>
+          ${precio ? `<span class="catalogo-producto-precio">${precio}</span>` : ""}
+        </div>
+      `;
 
       fragmento.appendChild(tarjeta);
     });
@@ -359,179 +241,44 @@
     contenedor.appendChild(fragmento);
   }
 
- 
-  function inicializarBuscador(productos) {
-    const formularioBusqueda = document.querySelector("#catalogo-form-busqueda");
+  // 4. Escuchadores de Eventos (HU 5.1 Buscador & HU 5.2 Filtros de Marca)
+  function inicializarModuloBuscadorYVitrina() {
+    const formBusqueda = document.querySelector("#catalogo-form-busqueda");
     const inputBusqueda = document.querySelector("#catalogo-input-busqueda");
 
-    
-    renderizarProductos(productos);
+    if (formBusqueda) {
+      formBusqueda.addEventListener("submit", (e) => e.preventDefault());
+    }
 
-    if (!formularioBusqueda || !inputBusqueda) return;
+    if (inputBusqueda) {
+      inputBusqueda.addEventListener("input", (e) => {
+        terminoBusquedaActivo = normalizarTexto(e.target.value);
+        const filtrados = aplicarFiltrosCombinados();
+        renderizarVitrina(filtrados);
+      });
+    }
 
-    formularioBusqueda.addEventListener("submit", (evento) => {
-      evento.preventDefault();
-    });
-
-    
-    inputBusqueda.addEventListener("input", (evento) => {
-      const terminoBusqueda = normalizarTexto(evento.target.value);
-      const resultados = filtrarProductos(productos, terminoBusqueda);
-
-      
-      renderizarProductos(resultados);
-
-      
-      document.dispatchEvent(
-        new CustomEvent("catalogo:busqueda-realizada", {
-          detail: { productosFiltrados: resultados, termino: terminoBusqueda },
-        })
-      );
+    // Escuchar selección de Marca enviada desde HU 1.1 (G1-MAR)
+    document.addEventListener("catalogo:marca-seleccionada", (e) => {
+      filtroMarcaActivo = e.detail ? e.detail.idMarca : null;
+      const filtrados = aplicarFiltrosCombinados();
+      renderizarVitrina(filtrados);
     });
   }
 
-  
-  async function iniciarBuscador() {
+  // 5. Carga Inicial de Datos desde el Servicio de Productos
+  async function cargarModuloBusqueda() {
     try {
-      const productos = await productoServicio.listarProductos();
-      inicializarBuscador(productos);
+      if (window.productoServicio && typeof window.productoServicio.listarProductos === "function") {
+        productosGlobales = await window.productoServicio.listarProductos();
+        renderizarVitrina(productosGlobales);
+        inicializarModuloBuscadorYVitrina();
+      }
     } catch (error) {
-      console.error("Error al cargar productos en el buscador:", error);
+      console.error("Error al cargar la vitrina/buscador:", error);
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iniciarBuscador);
-  } else {
-    iniciarBuscador();
-  }
+  document.addEventListener("DOMContentLoaded", cargarModuloBusqueda);
 })();
-})();
-// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
-
-// ===== G1-PRO · Productos · inicio (Santiago Ocampo) =====
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('catalogo-vitrina-contenedor')) {
-        renderizarVitrinaProductos();
-        configurarEventosModal();
-    }
-});
-
-async function renderizarVitrinaProductos() {
-    const contenedor = document.getElementById('catalogo-vitrina-contenedor');
-    if (!contenedor) return;
-
-    try {
-        const productos = await productoServicio.listarTodos();
-        contenedor.innerHTML = '';
-
-        if (!productos || productos.length === 0) {
-            contenedor.innerHTML = '<p>No hay productos disponibles en la vitrina.</p>';
-            return;
-        }
-
-        productos.forEach(producto => {
-            const article = document.createElement('article');
-            article.className = 'catalogo-producto-tarjeta';
-
-            const nombre = producto.nombreProducto || producto.nombre || 'Producto Nutresa';
-            const idMarca = producto.idMarca || 'N/A';
-            const idCategoria = producto.idCategoria || 'N/A';
-            const imagen = producto.urlImagen || producto.imagen || 'https://picsum.photos/200';
-
-            article.innerHTML = `
-                <figure>
-                    <img src="${imagen}" alt="Imagen de ${nombre}">
-                </figure>
-                <div class="catalogo-producto-info">
-                    <h3>${nombre}</h3>
-                    <p class="catalogo-producto-meta">Marca ID: ${idMarca} | Categoría ID: ${idCategoria}</p>
-                    <button class="catalogo-btn-detalle" onclick="verDetalleProducto(${producto.id})">Ver detalle</button>
-                </div>
-            `;
-            contenedor.appendChild(article);
-        });
-    } catch (error) {
-        console.error("Error al renderizar la vitrina:", error);
-        contenedor.innerHTML = '<p role="alert">Ocurrió un error al cargar los productos.</p>';
-    }
-}
-
-async function verDetalleProducto(idProducto) {
-    const modal = document.getElementById('catalogo-modal-detalle');
-    const modalBody = document.getElementById('catalogo-modal-body');
-    if (!modal || !modalBody) return;
-
-    try {
-        modalBody.innerHTML = '<p>Cargando detalle del producto...</p>';
-        modal.hidden = false;
-
-        // 1. Petición asíncrona al servicio de productos mediante buscarPorId
-        const producto = await productoServicio.buscarPorId(idProducto);
-        if (!producto) {
-            modalBody.innerHTML = '<p role="alert">No se encontró la información del producto.</p>';
-            return;
-        }
-
-        const nombre = producto.nombreProducto || producto.nombre || 'Producto Nutresa';
-        const descripcion = producto.descripcion || 'Sin descripción disponible.';
-        const imagen = producto.urlImagen || producto.imagen || 'https://picsum.photos/200';
-
-        // 2. Consulta cruzada obligatoria al servicio externo de recetas (prohibido acceder a arreglos ajenos)
-        let listaRecetasHTML = '<li>No se encontraron recetas asociadas a este producto.</li>';
-        if (typeof recetaServicio !== 'undefined' && typeof recetaServicio.listarPorProducto === 'function') {
-            try {
-                const recetas = await recetaServicio.listarPorProducto(idProducto);
-                if (recetas && recetas.length > 0) {
-                    listaRecetasHTML = recetas.map(r => `<li>${r.nombreReceta || r.nombre}</li>`).join('');
-                }
-            } catch (e) {
-                console.warn("No se pudieron cargar las recetas asociadas:", e);
-            }
-        }
-
-        // Renderizado semántico de la ficha detallada en UTF-8
-        modalBody.innerHTML = `
-            <article class="catalogo-ficha-detalle">
-                <header>
-                    <h2 id="modal-titulo-producto">${nombre}</h2>
-                </header>
-                <figure>
-                    <img src="${imagen}" alt="Vista detallada de ${nombre}">
-                </figure>
-                <div class="catalogo-detalle-info">
-                    <h3>Descripción</h3>
-                    <p>${descripcion}</p>
-                    <h3>Recetas en las que aparece</h3>
-                    <ul>
-                        ${listaRecetasHTML}
-                    </ul>
-                </div>
-            </article>
-        `;
-    } catch (error) {
-        console.error("Error al cargar la ficha de detalle:", error);
-        modalBody.innerHTML = '<p role="alert">Error al cargar la ficha técnica del producto.</p>';
-    }
-}
-
-function configurarEventosModal() {
-    const btnCerrar = document.getElementById('catalogo-modal-cerrar');
-    const modal = document.getElementById('catalogo-modal-detalle');
-    
-    if (btnCerrar && modal) {
-        btnCerrar.addEventListener('click', () => {
-            modal.hidden = true;
-        });
-        
-        window.addEventListener('click', (evento) => {
-            if (evento.target === modal) {
-                modal.hidden = true;
-            }
-        });
-    }
-}
-// ===== G1-PRO · Productos · fin =====
-
-
-
+// ===== G1-BUS · Katherin Ortega (HU 5.1 & HU 5.2) · fin =====
