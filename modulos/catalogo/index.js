@@ -1,6 +1,6 @@
 (function () {
   async function iniciarCatalogo() {
-    var estado = document.getElementById("catalogo-estado");
+    const estado = document.getElementById("catalogo-estado");
     if (!estado) {
       return;
     }
