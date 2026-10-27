@@ -195,7 +195,7 @@
     });
   }
 
-  // 3. Renderizado Semántico de la Vitrina de Productos
+  // 3. Renderizado Semántico de la Vitrina de Productos(Santiago)
   function renderizarVitrina(productos) {
     const contenedor =
       document.querySelector("#catalogo-productos-contenedor") ||
