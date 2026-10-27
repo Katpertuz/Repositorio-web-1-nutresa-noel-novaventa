@@ -18,60 +18,18 @@
 window.productoServicio = window.productoServicio || {};
 
 productoServicio.listarMarcas = async function () {
-  if (API_CONFIG.modo === 'local') {
-    const datos = await catalogoServicio.listarTodos();
-    return datos.marcas.map(function (marca) {
-      return { id: marca.id, nombre: marca.nombre.normalize('NFC') };
-    });
-  }
+  if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      return (datos.marcas || []).map((m) => ({ id: m.id, nombre: String(m.nombre).normalize("NFC") }));
+    }
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/marcas");
+    if (!respuesta.ok) throw new Error("No se pudieron cargar las marcas");
+    return await respuesta.json();
+  };
 
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/marcas');
-  if (!respuesta.ok) {
-    throw new Error('No se pudieron cargar las marcas');
-  }
-  return await respuesta.json();
-};
 // ===== G1-MAR · Marca · fin =====
 
-// ===== G7-CUP · Cupón · inicio - Duvan Tique =====
-window.catalogoServicio = window.catalogoServicio || {};
 
-window.catalogoServicio.crearPresentacion = async function (nuevaPresentacion) {
-  if (API_CONFIG.modo === 'local') {
-    const datos = await window.catalogoServicio.listarTodos();
-    datos.presentaciones = datos.presentaciones || [];
-    datos.presentaciones.push(nuevaPresentacion);
-    return Promise.resolve(nuevaPresentacion);
-  }
-
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/presentaciones', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(nuevaPresentacion)
-  });
-
-  if (!respuesta.ok) {
-    throw new Error('No se pudo crear la presentación comercial');
-  }
-
-// ===== G7-CUP · Cupón · inicio =====
-window.presentacionServicio = window.presentacionServicio || {};
-
-presentacionServicio.listarPresentaciones = async function () {
-  if (API_CONFIG.modo === 'local') {
-    const datos = await catalogoServicio.listarTodos();
-    return datos.presentaciones;
-  }
-
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/presentaciones');
-  if (!respuesta.ok) {
-    throw new Error('No se pudieron cargar las presentaciones comerciales');
-  }
-  return await respuesta.json();
-};
-// ===== G7-CUP · Cupón · fin =====
 // ===== G1-CAT · Categorías · inicio =====
 // Autor: Daniel Acevedo Yepes
 // Historia de Usuario 2.1 y 2.2: Listado y Registro de categorías
@@ -79,92 +37,74 @@ presentacionServicio.listarPresentaciones = async function () {
 window.productoServicio = window.productoServicio || {};
 
 productoServicio.listarCategorias = async function () {
-  if (API_CONFIG.modo === 'local') {
-    const datos = await catalogoServicio.listarTodos();
-    return datos.categorias;
-  }
+  if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      return datos.categorias || [];
+    }
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/categorias");
+    if (!respuesta.ok) throw new Error("No se pudieron cargar las categorías");
+    return await respuesta.json();
+  };
 
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/categorias');
-  if (!respuesta.ok) {
-    throw new Error('No se pudieron cargar las categorías');
-  }
-  return await respuesta.json();
-};
-
-productoServicio.crearCategoria = async function (categoria) {
-  if (API_CONFIG.modo === 'local') {
-    const datos = await catalogoServicio.listarTodos();
-    
-    // Validación estricta simulada (evitar IDs duplicados en el mock)
-    const existe = datos.categorias.some(c => c.id === categoria.idCategoria || c.idCategoria === categoria.idCategoria);
-    if (existe) throw new Error('El ID de la categoría ya existe.');
-    
-    // Formateamos el objeto para que coincida con lo que espera el listado (id y nombre)
-    const nuevaCategoriaMock = {
-        id: categoria.idCategoria,
-        nombre: categoria.nombreCategoria
-    };
-    
-    datos.categorias.push(nuevaCategoriaMock);
-    return nuevaCategoriaMock;
-  }
-
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/categorias', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(categoria)
-  });
-  
-  if (!respuesta.ok) {
-    throw new Error('No se pudo registrar la categoría en el servidor.');
-  }
-  
-  return await respuesta.json();
-};
+window.productoServicio.crearCategoria = async function (categoria) {
+    if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      const existe = (datos.categorias || []).some((c) => c.id === categoria.idCategoria || c.idCategoria === categoria.idCategoria);
+      if (existe) throw new Error("El ID de la categoría ya existe.");
+      const nueva = { id: categoria.idCategoria, nombre: categoria.nombreCategoria };
+      datos.categorias.push(nueva);
+      return nueva;
+    }
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/categorias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(categoria)
+    });
+    if (!respuesta.ok) throw new Error("No se pudo registrar la categoría.");
+    return await respuesta.json();
+  };
 // ===== G1-CAT · Categorías · fin =====
 
 
-
-// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · inicio =====
-window.productoServicio = window.productoServicio || {};
-
-/**
- * Obtiene el listado completo de productos desde el mock local o la API REST
- * @returns {Promise<Array>} Promesa que resuelve al arreglo de productos
- */
-productoServicio.listarProductos = async function () {
-  if (typeof API_CONFIG !== 'undefined' && API_CONFIG.modo === 'local') {
-    const datos = await catalogoServicio.listarTodos();
-    return datos.productos || [];
-  }
-
-  const respuesta = await fetch(API_CONFIG.baseUrl + '/productos');
-  if (!respuesta.ok) {
-    throw new Error('No se pudieron cargar los productos');
-  }
-  return await respuesta.json();
-};
-};
-// ===== G1-BUS · HU 5.1: Motor de Búsqueda (Katherin Ortega) · fin =====
-
-// ===== G1-PRO · Productos · inicio (Santiago Ocampo) =====
-if (typeof productoServicio === 'undefined') {
-    window.productoServicio = {};
-}
-
-productoServicio.listarTodos = async function() {
-    try {
-        if (window.productosMockData && Array.isArray(window.productosMockData)) {
-            return window.productosMockData;
-        }
-        if (window.catalogoMockData && Array.isArray(window.catalogoMockData.productos)) {
-            return window.catalogoMockData.productos;
-        }
-        return [];
-    } catch (error) {
-        console.error("Error en productoServicio.listarTodos:", error);
-        throw error;
+// G1-BUS · HU 5.1 & HU 5.2 (Katherin Ortega) · Métodos de consulta de Productos
+  window.productoServicio.listarProductos = async function () {
+    if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      return datos.productos || window.productosMockData || [];
     }
-};
-// ===== G1-PRO · Productos · fin =====
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/productos");
+    if (!respuesta.ok) throw new Error("No se pudieron cargar los productos");
+    return await respuesta.json();
+  };
 
+  // Alias de compatibilidad para evitar fallos si un compañero llama a listarTodos()
+  window.productoServicio.listarTodos = window.productoServicio.listarProductos;
+
+  // G7-CUP / G1-PRE · Servicio de Presentaciones Comerciales
+  window.presentacionServicio = window.presentacionServicio || {};
+
+  window.presentacionServicio.listarPresentaciones = async function () {
+    if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      return datos.presentaciones || [];
+    }
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/presentaciones");
+    if (!respuesta.ok) throw new Error("No se pudieron cargar las presentaciones.");
+    return await respuesta.json();
+  };
+
+  window.catalogoServicio.crearPresentacion = async function (nuevaPresentacion) {
+    if (typeof API_CONFIG !== "undefined" && API_CONFIG.modo === "local") {
+      const datos = await window.catalogoServicio.listarTodos();
+      datos.presentaciones = datos.presentaciones || [];
+      datos.presentaciones.push(nuevaPresentacion);
+      return Promise.resolve(nuevaPresentacion);
+    }
+    const respuesta = await fetch(API_CONFIG.baseUrl + "/presentaciones", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevaPresentacion)
+    });
+    if (!respuesta.ok) throw new Error("No se pudo crear la presentación.");
+    return await respuesta.json();
+  };
